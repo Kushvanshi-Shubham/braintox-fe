@@ -50,11 +50,11 @@ interface SimLink {
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
-const REPULSION      = 4500;
+const REPULSION      = 2000;
 const SPRING_LENGTH  = 120;
-const SPRING_STRENGTH = 0.06;
-const GRAVITY        = 0.03;
-const DAMPING        = 0.82;
+const SPRING_STRENGTH = 0.03;
+const GRAVITY        = 0.015;
+const DAMPING        = 0.60;
 const NODE_BASE_R    = 8;
 const MAX_NODES_SHOWN = 150;
 
@@ -480,8 +480,8 @@ export default function KnowledgeGraph() {
                       strokeOpacity={0.4}
                       filter={isSelected ? "url(#glow-strong)" : isHovered ? "url(#glow)" : undefined}
                     />
-                    {/* Label — show always if large enough, or on hover */}
-                    {(r >= 14 || isHovered || isSelected) && (
+                    {/* Label — show always by default */}
+                    {(true) && (
                       <text
                         textAnchor="middle"
                         dy={r + 12}
