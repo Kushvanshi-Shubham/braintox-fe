@@ -2,8 +2,8 @@ const { Jimp } = require('jimp');
 
 async function removeWhiteBg() {
   try {
-    const inputPath = 'd:/projects/Web-Development/Brainly/brainly-extension/icons/icon128.png';
-    const outputPath = 'd:/projects/Web-Development/Brainly/brainly-fe/public/logo.png';
+    const inputPath = 'd:/projects/Web-Development/BrainTox/braintox-extension/icons/icon128.png';
+    const outputPath = 'd:/projects/Web-Development/BrainTox/braintox-fe/public/logo.png';
     
     // Read the image
     const image = await Jimp.read(inputPath);
