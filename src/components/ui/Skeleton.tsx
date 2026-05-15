@@ -6,11 +6,9 @@ export const Skeleton = memo(({ className, variant = "rounded" }: { className?: 
     <div
       className={cn(
         "skeleton",
-        {
-          "rounded-full": variant === "circular",
-          "rounded-xl": variant === "rounded",
-          "rounded-md": variant === "text",
-        } as Record<string, boolean>,
+        variant === "circular" && "rounded-full",
+        variant === "rounded" && "rounded-xl",
+        variant === "text" && "rounded-md",
         className
       )}
     />
