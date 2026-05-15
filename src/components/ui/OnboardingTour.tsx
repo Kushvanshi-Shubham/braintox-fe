@@ -33,7 +33,7 @@ export function OnboardingTour() {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `${BACKEND_URL}/api/v1/profile/onboarding/complete`,
+        `${BACKEND_URL}/api/v1/onboarding/complete`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );

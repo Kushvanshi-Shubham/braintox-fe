@@ -7,8 +7,6 @@ const DYNAMIC_CACHE = 'braintox-dynamic-v2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
-  '/src/main.tsx',
-  '/src/index.css',
 ];
 
 // Install event - cache static assets

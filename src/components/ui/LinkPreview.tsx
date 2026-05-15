@@ -21,7 +21,7 @@ const LinkPreviewComponent = ({ url, title }: LinkPreviewProps) => {
     const fetchMetadata = async () => {
       try {
         setIsLoading(true);
-        const response = await apiClient.post('/link-preview/fetch-metadata', { url });
+        const response = await apiClient.post('/api/v1/link-preview/fetch-metadata', { url });
         
         if (response.data.success && response.data.metadata) {
           setMetadata(response.data.metadata);
