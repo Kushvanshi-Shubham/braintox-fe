@@ -22,7 +22,7 @@ export class BackendHealthService {
     // Check backend health every 10 seconds
     this.healthCheckInterval = setInterval(async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/health`, {
+        const response = await axios.get(`${BACKEND_URL}/api/v1/status`, {
           timeout: 3000,
         });
         
@@ -68,7 +68,7 @@ export class BackendHealthService {
 
   async checkNow(): Promise<boolean> {
     try {
-      const response = await axios.get(`${BACKEND_URL}/health`, {
+      const response = await axios.get(`${BACKEND_URL}/api/v1/status`, {
         timeout: 3000,
       });
       const isHealthy = response.status === 200;
