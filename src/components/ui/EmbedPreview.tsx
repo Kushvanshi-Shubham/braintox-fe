@@ -1,5 +1,7 @@
-import { useEffect, useRef, memo, useState } from "react";
-import { getEmbedUrl, getPlatformMeta, type ContentType } from "../../utlis/contentTypeDetection";
+import { useEffect, useRef, memo, useState, type ReactNode } from "react";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { getEmbedUrl, type ContentType } from "../../utlis/contentTypeDetection";
+import { PlatformIcon } from "../../utlis/PlatformIcon";
 import { LinkPreview } from "./LinkPreview";
 
 interface EmbedPreviewProps {
@@ -9,10 +11,10 @@ interface EmbedPreviewProps {
 }
 
 // Loading skeleton component
-const LoadingSkeleton = ({ icon }: { icon: string }) => (
+const LoadingSkeleton = ({ icon }: { icon: ReactNode }) => (
   <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 animate-pulse">
     <div className="text-center">
-      <div className="text-4xl mb-3">{icon}</div>
+      <div className="flex justify-center mb-3 opacity-60">{icon}</div>
       <div className="text-sm text-gray-500 dark:text-gray-400">Loading preview...</div>
     </div>
   </div>
@@ -22,7 +24,7 @@ const LoadingSkeleton = ({ icon }: { icon: string }) => (
 const ErrorFallback = ({ url }: { url: string }) => (
   <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-red-50 to-gray-100 dark:from-gray-800 dark:to-gray-900">
     <div className="text-center p-4">
-      <div className="text-4xl mb-3">⚠️</div>
+      <ExclamationTriangleIcon className="w-12 h-12 text-red-400 mx-auto mb-3" />
       <div className="text-sm text-gray-700 dark:text-gray-300 font-medium mb-2">Failed to load preview</div>
       <a 
         href={url} 
@@ -39,7 +41,6 @@ const ErrorFallback = ({ url }: { url: string }) => (
 const EmbedPreviewComponent = ({ url, type, title }: EmbedPreviewProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const embedUrl = getEmbedUrl(url, type);
-  const platformMeta = getPlatformMeta(type);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
@@ -76,7 +77,7 @@ const EmbedPreviewComponent = ({ url, type, title }: EmbedPreviewProps) => {
   if (type === 'youtube' && embedUrl) {
     return (
       <div className="relative w-full aspect-video rounded-t-xl overflow-hidden bg-black shadow-inner">
-        {isLoading && <LoadingSkeleton icon={platformMeta.icon} />}
+        {isLoading && <LoadingSkeleton icon={<PlatformIcon type={type} className="w-10 h-10" />} />}
         {hasError && <ErrorFallback url={url} />}
         <iframe
           src={embedUrl}
@@ -99,7 +100,7 @@ const EmbedPreviewComponent = ({ url, type, title }: EmbedPreviewProps) => {
   if (type === 'twitter') {
     return (
       <div ref={containerRef} className="relative w-full">
-        {isLoading && <LoadingSkeleton icon={platformMeta.icon} />}
+        {isLoading && <LoadingSkeleton icon={<PlatformIcon type={type} className="w-10 h-10" />} />}
         <blockquote className="twitter-tweet" data-theme="dark">
           <a href={url}>Loading tweet...</a>
         </blockquote>
@@ -111,7 +112,7 @@ const EmbedPreviewComponent = ({ url, type, title }: EmbedPreviewProps) => {
   if (type === 'instagram' && embedUrl) {
     return (
       <div className="relative w-full max-h-[600px] flex justify-center bg-gradient-to-b from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-850 rounded-t-xl overflow-hidden py-4">
-        {isLoading && <LoadingSkeleton icon={platformMeta.icon} />}
+        {isLoading && <LoadingSkeleton icon={<PlatformIcon type={type} className="w-10 h-10" />} />}
         <blockquote 
           className="instagram-media" 
           data-instgrm-permalink={url}
@@ -130,7 +131,7 @@ const EmbedPreviewComponent = ({ url, type, title }: EmbedPreviewProps) => {
   if (type === 'tiktok' && embedUrl) {
     return (
       <div className="relative w-full max-w-md mx-auto aspect-[9/16] rounded-t-xl overflow-hidden bg-black shadow-inner">
-        {isLoading && <LoadingSkeleton icon={platformMeta.icon} />}
+        {isLoading && <LoadingSkeleton icon={<PlatformIcon type={type} className="w-10 h-10" />} />}
         <iframe
           src={embedUrl}
           title={title}
@@ -148,7 +149,7 @@ const EmbedPreviewComponent = ({ url, type, title }: EmbedPreviewProps) => {
   if (type === 'spotify' && embedUrl) {
     return (
       <div className="relative w-full rounded-t-xl overflow-hidden bg-gradient-to-b from-green-50 to-gray-50 dark:from-gray-800 dark:to-gray-850">
-        {isLoading && <LoadingSkeleton icon={platformMeta.icon} />}
+        {isLoading && <LoadingSkeleton icon={<PlatformIcon type={type} className="w-10 h-10" />} />}
         <iframe
           src={embedUrl}
           title={title}
@@ -166,7 +167,7 @@ const EmbedPreviewComponent = ({ url, type, title }: EmbedPreviewProps) => {
   if (type === 'vimeo' && embedUrl) {
     return (
       <div className="relative w-full aspect-video rounded-t-xl overflow-hidden bg-black shadow-inner">
-        {isLoading && <LoadingSkeleton icon={platformMeta.icon} />}
+        {isLoading && <LoadingSkeleton icon={<PlatformIcon type={type} className="w-10 h-10" />} />}
         <iframe
           src={embedUrl}
           title={title}
@@ -184,7 +185,7 @@ const EmbedPreviewComponent = ({ url, type, title }: EmbedPreviewProps) => {
   if (type === 'codepen' && embedUrl) {
     return (
       <div className="relative w-full aspect-video rounded-t-xl overflow-hidden bg-gray-900 shadow-inner">
-        {isLoading && <LoadingSkeleton icon={platformMeta.icon} />}
+        {isLoading && <LoadingSkeleton icon={<PlatformIcon type={type} className="w-10 h-10" />} />}
         <iframe
           src={embedUrl}
           title={title}
@@ -201,7 +202,7 @@ const EmbedPreviewComponent = ({ url, type, title }: EmbedPreviewProps) => {
   if (type === 'twitch' && embedUrl) {
     return (
       <div className="relative w-full aspect-video rounded-t-xl overflow-hidden bg-purple-900/10 dark:bg-purple-900/20 shadow-inner">
-        {isLoading && <LoadingSkeleton icon={platformMeta.icon} />}
+        {isLoading && <LoadingSkeleton icon={<PlatformIcon type={type} className="w-10 h-10" />} />}
         <iframe
           src={embedUrl}
           title={title}
@@ -218,7 +219,7 @@ const EmbedPreviewComponent = ({ url, type, title }: EmbedPreviewProps) => {
   if (type === 'soundcloud') {
     return (
       <div className="relative w-full rounded-t-xl overflow-hidden bg-gradient-to-b from-orange-50 to-gray-50 dark:from-gray-800 dark:to-gray-850 p-4">
-        {isLoading && <LoadingSkeleton icon={platformMeta.icon} />}
+        {isLoading && <LoadingSkeleton icon={<PlatformIcon type={type} className="w-10 h-10" />} />}
         <iframe
           width="100%"
           height="166"
@@ -260,3 +261,4 @@ declare global {
     };
   }
 }
+

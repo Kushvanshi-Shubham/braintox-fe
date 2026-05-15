@@ -60,33 +60,33 @@ const FilterSort = memo(({
           >
             <option value="all">All Types</option>
             <optgroup label="Social Media">
-              <option value="youtube">▶️ YouTube</option>
-              <option value="twitter">𝕏 Twitter / X</option>
-              <option value="instagram">📷 Instagram</option>
-              <option value="tiktok">🎵 TikTok</option>
-              <option value="linkedin">💼 LinkedIn</option>
-              <option value="facebook">👥 Facebook</option>
-              <option value="pinterest">📌 Pinterest</option>
-              <option value="reddit">🔴 Reddit</option>
+              <option value="youtube">YouTube</option>
+              <option value="twitter">Twitter / X</option>
+              <option value="instagram">Instagram</option>
+              <option value="tiktok">TikTok</option>
+              <option value="linkedin">LinkedIn</option>
+              <option value="facebook">Facebook</option>
+              <option value="pinterest">Pinterest</option>
+              <option value="reddit">Reddit</option>
             </optgroup>
             <optgroup label="Media & Entertainment">
-              <option value="spotify">🎧 Spotify</option>
-              <option value="soundcloud">🎵 SoundCloud</option>
-              <option value="vimeo">▶️ Vimeo</option>
-              <option value="twitch">🎮 Twitch</option>
+              <option value="spotify">Spotify</option>
+              <option value="soundcloud">SoundCloud</option>
+              <option value="vimeo">Vimeo</option>
+              <option value="twitch">Twitch</option>
             </optgroup>
             <optgroup label="Development">
-              <option value="github">🐙 GitHub</option>
-              <option value="codepen">✏️ CodePen</option>
+              <option value="github">GitHub</option>
+              <option value="codepen">CodePen</option>
             </optgroup>
             <optgroup label="Writing">
-              <option value="medium">Ⓜ️ Medium</option>
-              <option value="article">📄 Article</option>
+              <option value="medium">Medium</option>
+              <option value="article">Article</option>
             </optgroup>
             <optgroup label="Other">
-              <option value="video">🎬 Video</option>
-              <option value="resource">📚 Resource</option>
-              <option value="other">🔗 Other</option>
+              <option value="video">Video</option>
+              <option value="resource">Resource</option>
+              <option value="other">Other</option>
             </optgroup>
           </select>
         </div>
@@ -140,3 +140,4 @@ const FilterSort = memo(({
 FilterSort.displayName = "FilterSort";
 
 export { FilterSort };
+

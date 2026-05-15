@@ -46,6 +46,7 @@ export interface ProfileData {
   profilePic: string;
   bio: string;
   joinedAt: string;
+  brainPower: number;
   contentCount: number;
   typeBreakdown: TypeBreakdown[];
   recentActivity: RecentActivity[];

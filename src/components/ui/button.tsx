@@ -8,7 +8,7 @@ const baseStyle = cn(
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
   "focus-visible:ring-purple-500 dark:focus-visible:ring-purple-400",
   "dark:focus-visible:ring-offset-gray-900",
-  "active:scale-[0.98]"
+  "active-scale"
 );
 
 const variantStyles = {
@@ -23,7 +23,7 @@ const variantStyles = {
     "hover:bg-gray-50 dark:hover:bg-gray-700",
     "text-gray-800 dark:text-gray-200",
     "border border-gray-200 dark:border-gray-600",
-    "shadow-sm hover:shadow-md"
+    "shadow-sm hover:shadow-md hover:shadow-gray-200/50 dark:hover:shadow-black/20"
   ),
   ghost: cn(
     "bg-transparent",
@@ -34,7 +34,7 @@ const variantStyles = {
     "bg-gradient-to-r from-red-500 to-rose-600",
     "hover:from-red-600 hover:to-rose-700",
     "text-white shadow-lg shadow-red-500/25",
-    "hover:shadow-xl hover:shadow-red-500/30"
+    "hover:shadow-xl hover:shadow-red-500/40"
   ),
 };
 

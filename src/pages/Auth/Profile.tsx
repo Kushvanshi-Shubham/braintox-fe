@@ -11,7 +11,9 @@ import { Avatar } from "../../components/ui/Avatar";
 import ImageCropper from "../../components/ui/ImageCropper";
 import type { ProfileData } from "../../types";
 import { getPlatformMeta, type ContentType } from "../../utlis/contentTypeDetection";
+import { PlatformIcon } from "../../utlis/PlatformIcon";
 import { useFollowers, useFollowing } from "../../hooks/useFollow";
+import { FireIcon, LightBulbIcon, TagIcon, ChartBarIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -141,7 +143,7 @@ export default function Profile() {
       // Convert base64 to blob
       const blob = await fetch(croppedImage).then(r => r.blob());
       formData.append('file', blob);
-      formData.append('upload_preset', 'brainly_profiles'); // You'll need to create this in Cloudinary
+      formData.append('upload_preset', 'braintox_profiles'); // You'll need to create this in Cloudinary
       formData.append('cloud_name', 'YOUR_CLOUD_NAME'); // Replace with your Cloudinary cloud name
 
       const response = await axios.post(
@@ -189,7 +191,7 @@ export default function Profile() {
     return (
       <div className="px-4 py-8">
         <div className="max-w-md mx-auto mt-20 p-6 rounded-lg shadow-lg bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 text-center">
-          <p className="font-semibold mb-3">🚨 Oh no! {error}</p>
+          <p className="font-semibold mb-3 flex items-center gap-2"><ExclamationCircleIcon className="w-5 h-5" /> Oh no! {error}</p>
           <Button onClick={fetchProfile} variant="primary" text="Retry Loading Profile" />
         </div>
       </div>
@@ -396,14 +398,14 @@ export default function Profile() {
                 <textarea
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
-                  placeholder="Tell us about yourself... What makes you unique? 🌟"
+                  placeholder="Tell us about yourself... What makes you unique?"
                   rows={4}
                   maxLength={500}
                   className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none resize-none transition-all"
                 />
                 <div className="flex items-center justify-between mt-2">
-                  <p className="text-xs text-gray-500 dark:text-gray-400 italic">
-                    💡 Tip: Share your interests, expertise, or what you're learning
+                  <p className="text-xs text-gray-500 dark:text-gray-400 italic flex items-center gap-1">
+                    <LightBulbIcon className="w-3.5 h-3.5 flex-shrink-0" /> Tip: Share your interests, expertise, or what you're learning
                   </p>
                   <p className={`text-xs font-medium ${
                     bio.length > 450 
@@ -421,7 +423,24 @@ export default function Profile() {
         </motion.div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mb-4 sm:mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-6 mb-4 sm:mb-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05 }}
+            className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-lg shadow-lg p-3 sm:p-6 cursor-default border border-yellow-200 dark:border-yellow-900/50"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm font-medium">Brain Power</p>
+                <p className="text-2xl sm:text-4xl font-bold text-yellow-600 dark:text-yellow-400 mt-1 sm:mt-2 flex items-center gap-1">
+                  {profile?.brainPower || 0}
+                </p>
+              </div>
+              <FireIcon className="w-8 h-8 sm:w-12 sm:h-12 text-yellow-500 opacity-20" />
+            </div>
+          </motion.div>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -486,7 +505,7 @@ export default function Profile() {
                   {profile?.totalTags || 0}
                 </p>
               </div>
-              <span className="text-3xl sm:text-5xl opacity-20">🏷️</span>
+              <TagIcon className="w-8 h-8 sm:w-12 sm:h-12 text-blue-600 dark:text-blue-400 opacity-20" />
             </div>
           </motion.div>
 
@@ -503,7 +522,7 @@ export default function Profile() {
                   {profile?.typeBreakdown?.length || 0}
                 </p>
               </div>
-              <span className="text-3xl sm:text-5xl opacity-20">📊</span>
+              <ChartBarIcon className="w-8 h-8 sm:w-12 sm:h-12 text-green-600 dark:text-green-400 opacity-20" />
             </div>
           </motion.div>
         </div>
@@ -517,8 +536,9 @@ export default function Profile() {
             className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-lg shadow-lg p-4 sm:p-6"
           >
             <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <h2 className="text-base sm:text-xl font-bold text-gray-900 dark:text-white">
-                📊 <span className="hidden sm:inline">Content by Type</span><span className="sm:hidden">By Type</span>
+              <h2 className="text-base sm:text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <ChartBarIcon className="w-5 h-5" />
+                <span className="hidden sm:inline">Content by Type</span><span className="sm:hidden">By Type</span>
               </h2>
               <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                 {profile?.contentCount || 0} total
@@ -533,7 +553,7 @@ export default function Profile() {
                   <div key={item._id || index} className="group hover:bg-gray-50 dark:hover:bg-gray-700/50 p-2 sm:p-3 rounded-lg transition-colors">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2 sm:gap-3">
-                        <span className="text-lg sm:text-2xl">{platformMeta.icon}</span>
+                        <PlatformIcon type={item._id as ContentType} className="w-6 h-6 sm:w-8 sm:h-8" />
                         <div>
                           <span className="font-semibold text-gray-800 dark:text-gray-200 capitalize block text-sm sm:text-base">
                             {item._id}
@@ -561,7 +581,7 @@ export default function Profile() {
                 })
               ) : (
                 <div className="text-center py-8 sm:py-12">
-                  <span className="text-4xl sm:text-6xl opacity-20 block mb-3 sm:mb-4">📊</span>
+                    <ChartBarIcon className="w-16 h-16 sm:w-24 sm:h-24 text-gray-400 opacity-20 mx-auto mb-3 sm:mb-4" />
                   <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400">
                     No content types yet. Start saving content!
                   </p>
@@ -578,8 +598,9 @@ export default function Profile() {
             className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-lg shadow-lg p-4 sm:p-6"
           >
             <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <h2 className="text-base sm:text-xl font-bold text-gray-900 dark:text-white">
-                🏷️ <span className="hidden sm:inline">Most Used Tags</span><span className="sm:hidden">Top Tags</span>
+              <h2 className="text-base sm:text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                <TagIcon className="w-5 h-5" />
+                <span className="hidden sm:inline">Most Used Tags</span><span className="sm:hidden">Top Tags</span>
               </h2>
               <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                 {profile?.totalTags || 0} unique
@@ -616,7 +637,7 @@ export default function Profile() {
                 })
               ) : (
                 <div className="text-center w-full py-12">
-                  <span className="text-6xl opacity-20 block mb-4">🏷️</span>
+                    <TagIcon className="w-16 h-16 text-gray-400 opacity-20 mx-auto mb-4" />
                   <p className="text-gray-500 dark:text-gray-400">
                     No tags used yet. Add tags to your content!
                   </p>
@@ -645,10 +666,10 @@ export default function Profile() {
                     className="flex items-start gap-4 pb-4 border-b border-gray-200 dark:border-gray-700 last:border-0"
                   >
                     <div 
-                      className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg"
+                      className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold"
                       style={{ backgroundColor: platformMeta.color }}
                     >
-                      {platformMeta.icon}
+                      <PlatformIcon type={item.type as ContentType} className="w-5 h-5" />
                     </div>
                     <div className="flex-1">
                       <h3 className="font-semibold text-gray-900 dark:text-white line-clamp-1">

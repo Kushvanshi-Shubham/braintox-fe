@@ -10,6 +10,7 @@ import {
   FolderIcon,
   LinkIcon,
   TagIcon,
+  FireIcon,
 } from "@heroicons/react/24/outline";
 
 interface PublicProfileData {
@@ -17,6 +18,7 @@ interface PublicProfileData {
   bio: string;
   profilePic: string;
   joinedAt: string;
+  brainPower: number;
   followersCount: number;
   followingCount: number;
   contentCount: number;
@@ -113,9 +115,10 @@ export default function PublicProfile() {
             <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">{profile.bio}</p>
           )}
           <div className="flex items-center justify-center gap-6 mt-4 text-sm text-gray-500 dark:text-gray-400">
+            <span className="flex items-center gap-1 text-yellow-600 dark:text-yellow-400 font-semibold bg-yellow-100/50 dark:bg-yellow-900/20 px-2 py-0.5 rounded-full"><FireIcon className="w-4 h-4" /> {profile.brainPower} Brain Power</span>
             <span><strong className="text-gray-900 dark:text-white">{profile.followersCount}</strong> followers</span>
             <span><strong className="text-gray-900 dark:text-white">{profile.followingCount}</strong> following</span>
-            <span>Joined {new Date(profile.joinedAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })}</span>
+            <span className="hidden sm:inline">Joined {new Date(profile.joinedAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })}</span>
           </div>
         </motion.div>
 

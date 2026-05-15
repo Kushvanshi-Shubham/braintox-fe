@@ -2,7 +2,8 @@ import { useEffect, useState, useMemo, memo } from "react";
 import { motion } from "framer-motion";
 import { useContent } from "../hooks/useContent";
 import { Card } from "../components/ui/Card";
-import { EmptyState } from "../components/ui/EmptyState";
+import { EmptyState } from "../components/EmptyState";
+import { FolderIcon } from "@heroicons/react/24/outline";
 import { FilterSort } from "../components/ui/FilterSort";
 import { ContentGridSkeleton } from "../components/ui/Skeleton";
 
@@ -30,7 +31,7 @@ function exportToMarkdown(contents: ExportableContent[]) {
   }
 
   const lines: string[] = [
-    `# 🧠 My Knowledge Base`,
+    `# My Knowledge Base`,
     ``,
     `> Exported from Braintox on ${date}`,
     `> ${contents.length} saved items`,
@@ -221,7 +222,11 @@ function Dashboard() {
         )}
         
         {!loading && !error && contents.length === 0 && (
-          <EmptyState />
+          <EmptyState 
+            icon={<FolderIcon className="w-full h-full" />}
+            title="Your brain is empty"
+            description="Save your first link to start building your personal knowledge base."
+          />
         )}
         
         {!loading && !error && contents.length > 0 && filteredContents.length === 0 && (

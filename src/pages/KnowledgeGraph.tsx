@@ -4,9 +4,9 @@ import axios from "axios";
 import { BACKEND_URL } from "../config";
 import { Spinner } from "../components/ui/Spinner";
 import { getPlatformMeta, type ContentType } from "../utlis/contentTypeDetection";
+import { PlatformIcon } from "../utlis/PlatformIcon";
+import { ShareIcon } from "@heroicons/react/24/outline";
 import { cn } from "../utlis/cn";
-
-// ─── Types ───────────────────────────────────────────────────────────────────
 
 interface RawNode {
   id: string;
@@ -32,6 +32,7 @@ interface GraphData {
 
 // Physics node with mutable position / velocity
 interface SimNode extends RawNode {
+  [x: string]: any;
   x: number;
   y: number;
   vx: number;
@@ -301,9 +302,7 @@ export default function KnowledgeGraph() {
       .filter(n => {
         if (searchQuery && !n.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
         if (!activeTag) return true;
-        return graphData?.links.some(
-          l => (l.source === n.id || l.target === n.id) && l.sharedTags.includes(activeTag)
-        ) ?? false;
+        return n.tags?.includes(activeTag);
       })
       .map(n => n.id)
   );
@@ -320,7 +319,9 @@ export default function KnowledgeGraph() {
   if (error || !graphData) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-4 px-4 text-center">
-        <div className="text-6xl">🕸️</div>
+        <div className="text-6xl">
+          <ShareIcon className="w-16 h-16 text-gray-400 mx-auto" />
+        </div>
         <h2 className="text-2xl font-bold text-gray-800 dark:text-white">No Graph Yet</h2>
         <p className="text-gray-500 dark:text-gray-400 max-w-md">
           {error ?? "Save some content with shared tags to see connections appear here."}
@@ -370,7 +371,19 @@ export default function KnowledgeGraph() {
         </button>
       </motion.div>
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden relative">
+        {/* Helper message if no links */}
+        {graphData.links.length === 0 && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+            <div className="bg-gray-900/80 backdrop-blur px-6 py-4 rounded-xl border border-gray-800 text-center max-w-sm">
+              <ShareIcon className="w-8 h-8 text-purple-400 mx-auto mb-2" />
+              <p className="text-gray-300 text-sm">
+                Nodes are pushed apart right now. <strong className="text-white">Add the same tags</strong> to multiple items to see them connect and cluster together!
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* ── Graph canvas ── */}
         <svg
           ref={svgRef}
@@ -409,9 +422,9 @@ export default function KnowledgeGraph() {
                     y1={l.source.y}
                     x2={l.target.x}
                     y2={l.target.y}
-                    stroke={isHighlighted ? "#a78bfa" : "#374151"}
-                    strokeWidth={isHighlighted ? l.weight + 1 : Math.min(l.weight, 3)}
-                    strokeOpacity={isHighlighted ? 0.9 : 0.4}
+                    stroke={isHighlighted ? "#c4b5fd" : "rgba(167, 139, 250, 0.25)"}
+                    strokeWidth={isHighlighted ? l.weight + 2 : Math.min(l.weight, 4)}
+                    strokeOpacity={isHighlighted ? 1 : 0.8}
                   />
                 );
               })}
@@ -497,7 +510,7 @@ export default function KnowledgeGraph() {
               className="p-4 border-b border-gray-800"
             >
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-xl">{getPlatformMeta(selectedNode.type as ContentType).icon}</span>
+                <PlatformIcon type={selectedNode.type as ContentType} className="w-5 h-5" />
                 <span
                   className="text-xs font-bold uppercase px-2 py-0.5 rounded-full"
                   style={{

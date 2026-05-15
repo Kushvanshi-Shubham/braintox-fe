@@ -1,6 +1,6 @@
-# Brainly Frontend 🎨
+# BrainTox Frontend 🎨
 
-A modern, responsive React frontend for the Brainly content management platform. Built with React 19, TypeScript, Vite, and Tailwind CSS.
+A modern, responsive React frontend for the BrainTox content management platform. Built with React 19, TypeScript, Vite, and Tailwind CSS.
 
 ## ✨ Features
 
@@ -25,7 +25,7 @@ A modern, responsive React frontend for the Brainly content management platform.
 1. **Clone the repository**
    ```bash
    git clone <your-repo-url>
-   cd brainly-fe
+   cd braintox-fe
    ```
 
 2. **Install dependencies**
@@ -63,7 +63,7 @@ npm run preview
 ## 📁 Project Structure
 
 ```
-brainly-fe/
+braintox-fe/
 ├── src/
 │   ├── components/ui/     # Reusable UI components
 │   ├── context/           # React context
@@ -98,6 +98,22 @@ brainly-fe/
 - Dark mode support
 - Protected routes
 - Shareable collections
+- Social Feed & Global Discoverability
+
+## 🗺️ Product Roadmap (Hybrid Vision)
+
+Braintox is evolving into a definitive **Hybrid Knowledge Platform** via the following scheduled phases:
+
+1. **Phase 5: The Visual Knowledge Graph (In Progress)**
+   - Interactive 2D/3D Node Map visualizing the user's "Second Brain".
+   - Links clustered by tags, enabling visual spatial navigation of knowledge.
+2. **Phase 6: Viral "Clone" Mechanics & Gamification**
+   - 1-click "Clone to my Brain" for social feed items.
+   - User Reputation ("Brain Power" score) for top curators.
+3. **Phase 7: Collaborative "Shared Brains" (Multiplayer)**
+   - Team/Friend collaborative collections with real-time syncing.
+4. **Phase 8: Monetized Curation (Creator Economy)**
+   - Stripe integration to sell premium, heavily curated collections (The Substack for Knowledge).
 
 ## 📝 Scripts
 

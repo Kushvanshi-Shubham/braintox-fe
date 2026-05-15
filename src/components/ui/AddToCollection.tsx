@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FolderIcon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
 import { useCollections } from "../../hooks/useCollections";
 import type { Collection } from "../../types";
@@ -68,7 +69,7 @@ export function AddToCollection({ contentId, onClose }: Readonly<AddToCollection
       <div className="max-h-64 overflow-y-auto">
         {collections.length === 0 ? (
           <div className="p-4 text-center">
-            <div className="text-3xl mb-2">📁</div>
+            <FolderIcon className="w-10 h-10 mx-auto mb-2 text-gray-400" />
             <p className="text-sm text-gray-500 dark:text-gray-400">No collections yet</p>
           </div>
         ) : (

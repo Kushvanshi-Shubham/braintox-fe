@@ -1,7 +1,7 @@
 // Service Worker for offline capabilities and caching
-const CACHE_NAME = 'braintox-v1';
-const STATIC_CACHE = 'braintox-static-v1';
-const DYNAMIC_CACHE = 'braintox-dynamic-v1';
+const CACHE_NAME = 'braintox-v2';
+const STATIC_CACHE = 'braintox-static-v2';
+const DYNAMIC_CACHE = 'braintox-dynamic-v2';
 
 // Assets to cache immediately
 const STATIC_ASSETS = [
@@ -70,7 +70,26 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Cache first strategy for static assets
+  // Network first for HTML/navigation requests (index.html must always be fresh
+  // so it references the latest JS/CSS bundle filenames)
+  if (request.mode === 'navigate' || request.headers.get('accept')?.includes('text/html')) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response.ok) {
+            const responseClone = response.clone();
+            caches.open(STATIC_CACHE).then((cache) => {
+              cache.put(request, responseClone);
+            });
+          }
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  // Cache first strategy for versioned static assets (JS/CSS with content hashes)
   event.respondWith(
     caches.match(request).then((cachedResponse) => {
       if (cachedResponse) {

@@ -4,6 +4,7 @@ import { useCollections } from "../hooks/useCollections";
 import { collectionsService } from "../services/collectionsService";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "../components/ui/Spinner";
+import { EmptyState } from "../components/EmptyState";
 import {
   FolderIcon,
   BookOpenIcon,
@@ -326,38 +327,25 @@ export default function Collections() {
 
         {/* Collections Grid */}
         {collections.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="text-center py-12 sm:py-16 md:py-20"
-          >
-            <div className={cn(
-              "w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6 rounded-full",
-              "bg-gradient-to-br from-purple-100 to-pink-100",
-              "dark:from-purple-900/30 dark:to-pink-900/30",
-              "flex items-center justify-center"
-            )}>
-              <FolderIcon className="w-8 h-8 sm:w-10 sm:h-10 text-purple-600 dark:text-purple-400" />
-            </div>
-            <h2 className="text-xl sm:text-2xl font-bold gradient-text mb-2">
-              No Collections Yet
-            </h2>
-            <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mb-4 sm:mb-6">
-              Create your first collection to organize your content
-            </p>
-            <button
-              onClick={() => setShowCreateModal(true)}
-              className={cn(
-                "px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-medium text-sm sm:text-base",
-                "bg-gradient-to-r from-purple-600 to-pink-600",
-                "hover:from-purple-700 hover:to-pink-700",
-                "text-white transition-all shadow-lg"
-              )}
-            >
-              Create Collection
-            </button>
-          </motion.div>
+          <EmptyState
+            icon={<FolderIcon className="w-full h-full" />}
+            title="No Collections Yet"
+            description="Create your first collection to organize your content"
+            action={
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className={cn(
+                  "px-6 py-3 rounded-xl font-medium shadow-lg text-base",
+                  "bg-gradient-to-r from-purple-600 to-pink-600",
+                  "hover:from-purple-700 hover:to-pink-700",
+                  "text-white transition-all flex items-center gap-2"
+                )}
+              >
+                <PlusIcon className="w-5 h-5" />
+                Create Collection
+              </button>
+            }
+          />
         ) : (
           <DndContext
             sensors={sensors}

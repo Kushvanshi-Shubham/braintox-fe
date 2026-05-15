@@ -4,7 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { BACKEND_URL } from "../../config";
 import { SEOHead } from "../../components/SEOHead";
-import { TrashIcon, PlusIcon, ClipboardIcon, KeyIcon } from "@heroicons/react/24/outline";
+import { TrashIcon, PlusIcon, ClipboardIcon, KeyIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 interface ApiKey {
   _id: string;
@@ -110,8 +110,8 @@ export default function ApiKeys() {
         {/* Newly created key (show once) */}
         {newKeyValue && (
           <div className="mb-6 p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/30">
-            <p className="text-sm font-semibold text-green-800 dark:text-green-200 mb-2">
-              ⚠️ Save this key now — it won't be shown again!
+            <p className="text-sm font-semibold text-green-800 dark:text-green-200 mb-2 flex items-center gap-1.5">
+              <ExclamationTriangleIcon className="w-4 h-4 flex-shrink-0" /> Save this key now — it won't be shown again!
             </p>
             <div className="flex items-center gap-2">
               <code className="flex-1 text-sm bg-white dark:bg-gray-800 p-2 rounded-lg font-mono break-all">

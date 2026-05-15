@@ -11,6 +11,8 @@ import { EmbedPreview } from "./EmbedPreview";
 import { AddToCollection } from "./AddToCollection";
 import { useCollections } from "../../hooks/useCollections";
 import { getPlatformMeta, type ContentType } from "../../utlis/contentTypeDetection";
+import { PlatformIcon } from "../../utlis/PlatformIcon";
+import { StarIcon as HeroStarIcon, ArchiveBoxIcon, ChatBubbleLeftEllipsisIcon } from "@heroicons/react/24/outline";
 import type { Content } from "../../types";
 import { triggerContentUpdate } from "../../utlis/events";
 import { Spinner } from "./Spinner";
@@ -131,13 +133,13 @@ const CardComponent = ({ content, refresh, collectionId, onContentRemoved }: Car
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
       className={cn(
         "group relative overflow-hidden will-change-transform",
-        "bg-white dark:bg-gray-800/90",
-        "rounded-xl sm:rounded-2xl",
-        "border border-gray-200/80 dark:border-gray-700/50",
-        "shadow-lg shadow-gray-200/50 dark:shadow-black/20",
-        "hover:shadow-xl hover:shadow-purple-200/30 dark:hover:shadow-purple-900/20",
-        "hover:border-purple-300/50 dark:hover:border-purple-700/50",
-        "transition-all duration-300"
+        "bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl",
+        "rounded-2xl sm:rounded-3xl",
+        "border border-white/50 dark:border-gray-700/50",
+        "shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.1)]",
+        "hover:shadow-[0_20px_40px_rgba(168,85,247,0.15)] dark:hover:shadow-[0_20px_40px_rgba(168,85,247,0.2)]",
+        "hover:border-purple-300/50 dark:hover:border-purple-500/50",
+        "transition-all duration-500 hover:-translate-y-2"
       )}
     >
       {/* Gradient glow effect on hover */}
@@ -153,7 +155,9 @@ const CardComponent = ({ content, refresh, collectionId, onContentRemoved }: Car
         {/* Header with platform badge and title */}
         <div className="mb-3 sm:mb-4">
           <div className="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3">
-            <span className="text-xl sm:text-2xl">{platformMeta.icon}</span>
+            <span style={{ color: platformMeta.color }}>
+              <PlatformIcon type={type as ContentType} className="w-5 h-5 sm:w-6 sm:h-6" />
+            </span>
             <span 
               className="text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2 sm:px-3 py-1 sm:py-1.5 rounded-full backdrop-blur-sm"
               style={{ 
@@ -165,10 +169,10 @@ const CardComponent = ({ content, refresh, collectionId, onContentRemoved }: Car
               {type}
             </span>
             {isFavorite && (
-              <span className="text-yellow-500 text-base sm:text-lg animate-pulse">★</span>
+              <HeroStarIcon className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-500 animate-pulse fill-yellow-400" />
             )}
             {isArchived && (
-              <span className="text-purple-500 text-base sm:text-lg">📦</span>
+              <ArchiveBoxIcon className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" />
             )}
           </div>
 
@@ -215,7 +219,7 @@ const CardComponent = ({ content, refresh, collectionId, onContentRemoved }: Car
             "border border-purple-200/50 dark:border-purple-800/30"
           )}>
             <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-              <span className="font-semibold text-purple-600 dark:text-purple-400">💭 Note:</span> {notes}
+              <span className="font-semibold text-purple-600 dark:text-purple-400 inline-flex items-center gap-1"><ChatBubbleLeftEllipsisIcon className="w-3.5 h-3.5" /> Note:</span> {notes}
             </p>
           </div>
         )}
@@ -268,7 +272,7 @@ const CardComponent = ({ content, refresh, collectionId, onContentRemoved }: Car
               <button
                 onClick={handleRemoveFromCollection}
                 className={cn(
-                  "p-2.5 rounded-xl transition-all duration-200",
+                  "p-2.5 rounded-xl transition-all duration-200 active-scale",
                   "text-gray-400 dark:text-gray-500",
                   "hover:bg-red-100 dark:hover:bg-red-900/30",
                   "hover:text-red-600 dark:hover:text-red-400"
@@ -283,10 +287,10 @@ const CardComponent = ({ content, refresh, collectionId, onContentRemoved }: Car
             <button
               onClick={toggleFavorite}
               className={cn(
-                "p-2.5 rounded-xl transition-all duration-200",
+                "p-2.5 rounded-xl transition-all duration-200 active-scale",
                 isFavorite 
-                  ? "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-500 shadow-sm shadow-yellow-200/50" 
-                  : "text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  ? "bg-yellow-100/80 dark:bg-yellow-900/40 text-yellow-500 shadow-sm shadow-yellow-200/50" 
+                  : "text-gray-400 dark:text-gray-500 hover:bg-gray-100/50 dark:hover:bg-gray-700/50"
               )}
               title={isFavorite ? "Remove from favorites" : "Add to favorites"}
             >
@@ -321,9 +325,9 @@ const CardComponent = ({ content, refresh, collectionId, onContentRemoved }: Car
             <button
               onClick={toggleArchive}
               className={cn(
-                "p-2.5 rounded-xl transition-all duration-200",
+                "p-2.5 rounded-xl transition-all duration-200 active-scale",
                 "text-gray-400 dark:text-gray-500",
-                "hover:bg-purple-100 dark:hover:bg-purple-900/30",
+                "hover:bg-purple-100/80 dark:hover:bg-purple-900/40",
                 "hover:text-purple-600 dark:hover:text-purple-400"
               )}
               title={isArchived ? "Unarchive" : "Archive"}

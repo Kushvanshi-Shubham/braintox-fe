@@ -1,4 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 
 interface Props {
   children: ReactNode;
@@ -33,7 +34,7 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-950 p-4">
           <div className="max-w-md w-full bg-white dark:bg-gray-900 rounded-lg shadow-lg p-8 text-center">
-            <div className="text-6xl mb-4">⚠️</div>
+            <ExclamationTriangleIcon className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
               Oops! Something went wrong
             </h1>

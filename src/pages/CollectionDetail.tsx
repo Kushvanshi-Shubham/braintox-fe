@@ -9,6 +9,12 @@ import { Card } from "../components/ui/Card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../components/ui/Dialog";
 import { Button } from "../components/ui/button";
 import type { Collection, Content } from "../types";
+import {
+  FolderIcon, BookOpenIcon, LightBulbIcon, FlagIcon, StarIcon,
+  FireIcon, BriefcaseIcon, PaintBrushIcon, RocketLaunchIcon, MapPinIcon,
+  TrophyIcon, ComputerDesktopIcon, BookmarkIcon, MusicalNoteIcon, FilmIcon,
+  HomeIcon, LockClosedIcon, InboxIcon,
+} from "@heroicons/react/24/outline";
 
 const CollectionDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -28,7 +34,24 @@ const CollectionDetail = () => {
   const [editIcon, setEditIcon] = useState("");
   const [editIsPrivate, setEditIsPrivate] = useState(false);
 
-  const iconOptions = ["📁", "📚", "💡", "🎯", "⭐", "🔥", "💼", "🎨", "🚀", "📌", "🏆", "💻", "📖", "🎵", "🎬", "🏠"];
+  const ICON_OPTIONS = [
+    { name: "Folder",   component: FolderIcon },
+    { name: "Book",     component: BookOpenIcon },
+    { name: "LightBulb",component: LightBulbIcon },
+    { name: "Flag",     component: FlagIcon },
+    { name: "Star",     component: StarIcon },
+    { name: "Fire",     component: FireIcon },
+    { name: "Briefcase",component: BriefcaseIcon },
+    { name: "Paint",    component: PaintBrushIcon },
+    { name: "Rocket",   component: RocketLaunchIcon },
+    { name: "Pin",      component: MapPinIcon },
+    { name: "Trophy",   component: TrophyIcon },
+    { name: "Computer", component: ComputerDesktopIcon },
+    { name: "Bookmark", component: BookmarkIcon },
+    { name: "Music",    component: MusicalNoteIcon },
+    { name: "Film",     component: FilmIcon },
+    { name: "Home",     component: HomeIcon },
+  ];
   const colorOptions = [
     { name: "Purple", value: "#9333ea" },
     { name: "Blue", value: "#3b82f6" },
@@ -159,26 +182,31 @@ const CollectionDetail = () => {
             <div className="flex items-center gap-3 sm:gap-4 flex-1 w-full">
               {isEditing ? (
                 <div className="grid grid-cols-4 sm:grid-cols-8 gap-2 mb-4 w-full">
-                  {iconOptions.map((icon) => (
+                  {ICON_OPTIONS.map(({ name, component: Icon }) => (
                     <button
-                      key={icon}
-                      onClick={() => setEditIcon(icon)}
-                      className={`text-xl sm:text-3xl p-1.5 sm:p-2 rounded-lg transition-all ${
-                        editIcon === icon
+                      key={name}
+                      onClick={() => setEditIcon(name)}
+                      className={`flex items-center justify-center p-1.5 sm:p-2 rounded-lg transition-all ${
+                        editIcon === name
                           ? "bg-purple-100 dark:bg-purple-900/30 scale-110"
                           : "hover:bg-gray-100 dark:hover:bg-gray-700"
                       }`}
+                      title={name}
                     >
-                      {icon}
+                      <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
                     </button>
                   ))}
                 </div>
               ) : (
                 <div
-                  className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center text-2xl sm:text-3xl shadow-lg flex-shrink-0"
+                  className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0"
                   style={{ backgroundColor: collection.color }}
                 >
-                  {collection.icon}
+                  {(() => {
+                    const found = ICON_OPTIONS.find(o => o.name === collection.icon);
+                    const Icon = found?.component ?? FolderIcon;
+                    return <Icon className="w-6 h-6 sm:w-8 sm:h-8 text-white" />;
+                  })()}
                 </div>
               )}
               <div className="flex-1 min-w-0">
@@ -236,8 +264,9 @@ const CollectionDetail = () => {
                         {collection.contentCount || 0} {collection.contentCount === 1 ? "item" : "items"}
                       </span>
                       {collection.isPrivate && (
-                        <span className="px-2 py-0.5 sm:py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-[10px] sm:text-xs rounded-full">
-                          🔒 <span className="hidden sm:inline">Private</span>
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 sm:py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-[10px] sm:text-xs rounded-full">
+                          <LockClosedIcon className="w-3 h-3" />
+                          <span className="hidden sm:inline">Private</span>
                         </span>
                       )}
                     </div>
@@ -300,7 +329,9 @@ const CollectionDetail = () => {
             transition={{ delay: 0.1 }}
             className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg p-8 sm:p-12 text-center"
           >
-            <div className="text-4xl sm:text-6xl mb-3 sm:mb-4">📭</div>
+            <div className="text-4xl sm:text-6xl mb-3 sm:mb-4 flex justify-center">
+              <InboxIcon className="w-16 h-16 sm:w-24 sm:h-24 text-gray-400" />
+            </div>
             <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-2">
               No content yet
             </h3>

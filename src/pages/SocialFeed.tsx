@@ -11,8 +11,10 @@ import { getPlatformMeta, type ContentType } from "../utlis/contentTypeDetection
 import type { Content } from "../types";
 import { useNavigate } from "react-router-dom";
 import { FollowButton } from "../components/ui/FollowButton";
-import { UserGroupIcon, InboxIcon, FireIcon, HashtagIcon, RectangleStackIcon } from "@heroicons/react/24/outline";
+import { UserGroupIcon, InboxIcon, FireIcon, HashtagIcon, RectangleStackIcon, BoltIcon, CpuChipIcon } from "@heroicons/react/24/outline";
+import { PlatformIcon } from "../utlis/PlatformIcon";
 import { cn } from "../utlis/cn";
+import { EmptyState } from "../components/EmptyState";
 
 interface SocialFeedContent extends Content {
   userDetails?: {
@@ -20,6 +22,7 @@ interface SocialFeedContent extends Content {
     username: string;
     email: string;
     profilePic?: string;
+    brainPower?: number;
   };
 }
 
@@ -28,7 +31,7 @@ const SocialFeed = () => {
   const [feed, setFeed] = useState<SocialFeedContent[]>([]);
   const [loading, setLoading] = useState(true);
   const [trending, setTrending] = useState<SocialFeedContent[]>([]);
-  const [popularTags, setPopularTags] = useState<{ _id: string; count: number }[]>([]);
+  const [popularTags, setPopularTags] = useState<{ _id: string; name?: string; count: number }[]>([]);
   const [stats, setStats] = useState({
     totalItems: 0,
     followingCount: 0,
@@ -94,68 +97,37 @@ const SocialFeed = () => {
 
   if (stats.followingCount === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3 }}
-          className="text-center max-w-md"
-        >
-          <div className={cn(
-            "w-20 h-20 mx-auto mb-6 rounded-full",
-            "bg-gradient-to-br from-purple-100 to-pink-100",
-            "dark:from-purple-900/30 dark:to-pink-900/30",
-            "flex items-center justify-center"
-          )}>
-            <UserGroupIcon className="w-10 h-10 text-purple-600 dark:text-purple-400" />
-          </div>
-          <h3 className="text-2xl font-bold gradient-text mb-3">
-            No Social Feed Yet
-          </h3>
-          <p className="text-gray-600 dark:text-gray-400 mb-8">
-            Follow people to see their content in your social feed
-          </p>
-          <button
-            onClick={() => navigate("/discover")}
-            className={cn(
-              "px-6 py-3 rounded-xl font-semibold",
-              "bg-gradient-to-r from-purple-600 to-pink-600",
-              "hover:from-purple-700 hover:to-pink-700",
-              "text-white transition-all duration-200",
-              "shadow-lg hover:shadow-xl active:scale-95"
-            )}
-          >
-            Discover People
-          </button>
-        </motion.div>
+      <div className="min-h-[70vh] flex items-center justify-center px-4">
+        <EmptyState
+          icon={<UserGroupIcon className="w-full h-full" />}
+          title="No Social Feed Yet"
+          description="Follow people to see their saved links and build your network"
+          action={
+            <button
+              onClick={() => navigate("/discover")}
+              className={cn(
+                "px-6 py-3 rounded-xl font-semibold",
+                "bg-gradient-to-r from-purple-600 to-pink-600",
+                "hover:from-purple-700 hover:to-pink-700",
+                "text-white transition-all shadow-lg text-base"
+              )}
+            >
+              Discover People
+            </button>
+          }
+        />
       </div>
     );
   }
 
   if (feed.length === 0 && stats.followingCount > 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3 }}
-          className="text-center max-w-md"
-        >
-          <div className={cn(
-            "w-20 h-20 mx-auto mb-6 rounded-full",
-            "bg-gradient-to-br from-purple-100 to-pink-100",
-            "dark:from-purple-900/30 dark:to-pink-900/30",
-            "flex items-center justify-center"
-          )}>
-            <InboxIcon className="w-10 h-10 text-purple-600 dark:text-purple-400" />
-          </div>
-          <h3 className="text-2xl font-bold gradient-text mb-3">
-            Feed is Empty
-          </h3>
-          <p className="text-gray-600 dark:text-gray-400">
-            The people you follow haven't saved any content yet
-          </p>
-        </motion.div>
+      <div className="min-h-[70vh] flex items-center justify-center px-4">
+        <EmptyState
+          icon={<InboxIcon className="w-full h-full" />}
+          title="Feed is Empty"
+          description="The people you follow haven't saved any content yet"
+        />
       </div>
     );
   }
@@ -217,9 +189,11 @@ const SocialFeed = () => {
               </h2>
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Recent saves from your network</p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <div className="flex overflow-x-auto gap-4 sm:gap-6 pb-4 snap-x hide-scrollbar scroll-smooth">
               {trending.map((item, idx) => (
-                <SocialFeedCard key={item._id} item={item} index={idx} />
+                <div key={item._id} className="min-w-[280px] sm:min-w-[320px] max-w-[350px] w-full shrink-0 snap-start">
+                  <SocialFeedCard item={item} index={idx} />
+                </div>
               ))}
             </div>
           </motion.div>
@@ -241,7 +215,7 @@ const SocialFeed = () => {
               {popularTags.map((tag) => (
                 <button
                   key={tag._id}
-                  onClick={() => navigate(`/explore?tag=${encodeURIComponent(tag._id)}`)}
+                  onClick={() => navigate(`/explore?tag=${encodeURIComponent(tag.name || tag._id)}`)}
                   className={cn(
                     "px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm font-medium",
                     "bg-purple-100 dark:bg-purple-900/30",
@@ -249,9 +223,9 @@ const SocialFeed = () => {
                     "hover:bg-purple-200 dark:hover:bg-purple-900/50",
                     "transition-all duration-200 active:scale-95"
                   )}
-                  title={`Explore content tagged with ${tag._id}`}
+                  title={`Explore content tagged with ${tag.name || tag._id}`}
                 >
-                  #{tag._id} <span className="opacity-60">({tag.count})</span>
+                  #{tag.name || tag._id} <span className="opacity-60">({tag.count})</span>
                 </button>
               ))}
             </div>
@@ -263,15 +237,16 @@ const SocialFeed = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.4 }}
+          className="max-w-2xl mx-auto mt-6 sm:mt-10"
         >
-          <div className="mb-4 sm:mb-6">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2 mb-1 sm:mb-2">
-              <RectangleStackIcon className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
-              All Content
+          <div className="mb-6 sm:mb-8 flex flex-col items-center text-center">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center justify-center gap-2 mb-1 sm:mb-2">
+              <RectangleStackIcon className="w-6 h-6 sm:w-8 sm:h-8 text-purple-600 dark:text-purple-400" />
+              Feed
             </h2>
-            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Latest saves from your network</p>
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">Latest from your network</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="flex flex-col gap-6 sm:gap-8">
             {feed.map((item, idx) => (
               <SocialFeedCard key={item._id} item={item} index={idx} />
             ))}
@@ -291,6 +266,17 @@ const SocialFeedCard = memo(({ item, index }: { item: SocialFeedContent; index: 
     day: "numeric",
     year: "numeric"
   });
+
+  const currentUserId = (() => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return null;
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.id || payload.userId;
+    } catch {
+      return null;
+    }
+  })();
 
   return (
     <motion.article
@@ -321,6 +307,10 @@ const SocialFeedCard = memo(({ item, index }: { item: SocialFeedContent; index: 
                 @{item.userDetails?.username || "unknown"}
               </p>
               <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                <span className="flex items-center gap-0.5 text-yellow-600 dark:text-yellow-400 font-semibold" title="Brain Power Score">
+                  <BoltIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> {item.userDetails?.brainPower || 0}
+                </span>
+                <span className="text-gray-300 dark:text-gray-700">•</span>
                 <CalendarIcon className="w-3 h-3 sm:w-3.5 sm:h-3.5 flex-shrink-0" />
                 <span className="truncate">{createdDate}</span>
               </div>
@@ -353,7 +343,7 @@ const SocialFeedCard = memo(({ item, index }: { item: SocialFeedContent; index: 
               className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg text-[10px] sm:text-xs font-semibold text-white shadow-sm flex-shrink-0"
               style={{ backgroundColor: platformMeta.color }}
             >
-              <span className="hidden sm:inline">{platformMeta.icon}</span>
+              <span className="hidden sm:inline"><PlatformIcon type={item.type as ContentType} className="w-3 h-3 sm:w-3.5 sm:h-3.5" /></span>
               <span>{item.type}</span>
             </span>
           </div>
@@ -400,25 +390,56 @@ const SocialFeedCard = memo(({ item, index }: { item: SocialFeedContent; index: 
           </div>
         )}
 
-        {/* View Link Button */}
-        <a
-          href={item.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={cn(
-            "w-full inline-flex items-center justify-center gap-2",
-            "px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm",
-            "bg-gradient-to-r from-purple-600 to-pink-600",
-            "hover:from-purple-700 hover:to-pink-700",
-            "text-white transition-all duration-200",
-            "shadow-md hover:shadow-lg active:scale-95"
+        {/* Actions */}
+        <div className="flex items-center gap-2 mt-2">
+          <a
+            href={item.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(
+              "flex-1 inline-flex items-center justify-center gap-2",
+              "px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm",
+              "bg-gradient-to-r from-purple-600 to-pink-600",
+              "hover:from-purple-700 hover:to-pink-700",
+              "text-white transition-all duration-200",
+              "shadow-md hover:shadow-lg active:scale-95"
+            )}
+          >
+            View
+            <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </a>
+          
+          {currentUserId !== item.userDetails?._id && (
+            <button
+              onClick={async (e) => {
+                e.preventDefault();
+                try {
+                  const token = localStorage.getItem("token");
+                  await axios.post(`${BACKEND_URL}/api/v1/social/clone/${item._id}`, {}, {
+                    headers: { Authorization: `Bearer ${token}` }
+                  });
+                  toast.success("Cloned to your Brain!");
+                } catch (error: any) {
+                  toast.error(error.response?.data?.message || "Failed to clone content");
+                }
+              }}
+              className={cn(
+                "inline-flex items-center justify-center gap-1.5 sm:gap-2",
+                "px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm",
+                "bg-gray-100 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700",
+                "hover:bg-purple-100 dark:hover:bg-purple-900/40",
+                "text-gray-900 dark:text-purple-300 transition-all duration-200",
+                "shadow-sm hover:shadow active:scale-95"
+              )}
+              title="Clone this content to your Brain"
+            >
+              <CpuChipIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span>Clone</span>
+            </button>
           )}
-        >
-          View Content
-          <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
-        </a>
+        </div>
       </div>
     </motion.article>
   );

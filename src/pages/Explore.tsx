@@ -8,6 +8,7 @@ import { Spinner } from "../components/ui/Spinner";
 import { SearchIcon, CalendarIcon, ShareIcon } from "../Icons/IconsImport";
 import type { Content, DiscoveryData, SearchFilters } from "../types";
 import { getPlatformMeta, type ContentType } from "../utlis/contentTypeDetection";
+import { PlatformIcon } from "../utlis/PlatformIcon";
 import { FireIcon, MagnifyingGlassIcon, ChartBarIcon, CubeIcon, HashtagIcon, ClockIcon } from "@heroicons/react/24/outline";
 import { cn } from "../utlis/cn";
 
@@ -250,8 +251,8 @@ const Explore = () => {
                           >
                             {discoveryData.randomItem.link}
                           </a>
-                          <span className="inline-block mt-2 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: getPlatformMeta(discoveryData.randomItem.type as ContentType).color }}>
-                            {getPlatformMeta(discoveryData.randomItem.type as ContentType).icon} {discoveryData.randomItem.type}
+                          <span className="inline-flex items-center gap-1 mt-2 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: getPlatformMeta(discoveryData.randomItem.type as ContentType).color }}>
+                            <PlatformIcon type={discoveryData.randomItem.type as ContentType} className="w-3 h-3" /> {discoveryData.randomItem.type}
                           </span>
                         </div>
                       ) : (
@@ -276,7 +277,9 @@ const Explore = () => {
                           key={item._id}
                           className="glass border border-gray-200/50 dark:border-gray-700/50 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center"
                         >
-                          <div className="text-2xl sm:text-3xl mb-1 sm:mb-2">{getPlatformMeta(item._id as ContentType).icon}</div>
+                          <div className="flex justify-center mb-1 sm:mb-2">
+                            <PlatformIcon type={item._id as ContentType} className="w-6 h-6 sm:w-8 sm:h-8" />
+                          </div>
                           <div className="text-lg sm:text-2xl font-bold gradient-text">
                             {item.count}
                           </div>
@@ -339,7 +342,9 @@ const Explore = () => {
                             key={item._id}
                             className="flex items-start gap-2 sm:gap-3 p-2.5 sm:p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
                           >
-                            <div className="text-xl sm:text-2xl">{getPlatformMeta(item.type as ContentType).icon}</div>
+                            <div className="text-xl sm:text-2xl flex">
+                              <PlatformIcon type={item.type as ContentType} className="w-5 h-5 sm:w-6 sm:h-6" />
+                            </div>
                             <div className="flex-1 min-w-0">
                               <h4 className="font-medium text-sm sm:text-base text-gray-900 dark:text-white line-clamp-1">
                                 {item.title}
@@ -495,8 +500,8 @@ const Explore = () => {
                       >
                         <div className="p-6">
                           <div className="flex items-start justify-between mb-3">
-                            <span className="px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: getPlatformMeta(item.type as ContentType).color }}>
-                              {getPlatformMeta(item.type as ContentType).icon} {item.type}
+                            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: getPlatformMeta(item.type as ContentType).color }}>
+                              <PlatformIcon type={item.type as ContentType} className="w-3 h-3" /> {item.type}
                             </span>
                           </div>
                           <h3 className="font-bold text-gray-900 dark:text-white mb-2 line-clamp-2">

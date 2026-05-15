@@ -3,6 +3,7 @@ import axios from "axios";
 import { BACKEND_URL } from "../config";
 import { cn } from "../utlis/cn";
 import toast from "react-hot-toast";
+import { EnvelopeIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 export function EmailVerificationBanner() {
   const [show, setShow] = useState(false);
@@ -57,7 +58,7 @@ export function EmailVerificationBanner() {
         "text-amber-800 dark:text-amber-200"
       )}
     >
-      📧 Please verify your email address.{" "}
+      <EnvelopeIcon className="inline-block w-4 h-4 mr-1 align-text-bottom" /> Please verify your email address.{" "}
       <button
         onClick={handleResend}
         disabled={sending}
@@ -70,7 +71,7 @@ export function EmailVerificationBanner() {
         className="ml-3 text-amber-600 dark:text-amber-400 hover:opacity-70"
         title="Dismiss"
       >
-        ✕
+        <XMarkIcon className="w-4 h-4" />
       </button>
     </div>
   );

@@ -13,8 +13,8 @@ export const LandingNavbar = () => (
     transition={{ duration: 0.5, ease: "easeOut" }}
     className="flex justify-between items-center px-6 py-4 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm shadow-md dark:shadow-lg transition-colors duration-300 sticky top-0 z-20"
   >
-    <Link to="/" className="flex items-center gap-2 text-2xl font-bold text-purple-600 dark:text-purple-400">
-      <Logo className="w-8 h-8" />
+    <Link to="/" className="flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-white">
+      <Logo className="w-8 h-8 drop-shadow-sm" />
       Braintox
     </Link>
     <div className="flex items-center space-x-2">

@@ -7,15 +7,16 @@ export const BackendStatusNotification: React.FC = () => {
   const [showNotification, setShowNotification] = useState(false);
 
   useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
     if (!isBackendHealthy) {
-      setShowNotification(true);
+      // Wait 5s before showing — prevents false positives during backend cold starts
+      // or brief network hiccups when switching tabs / opening the app
+      timer = setTimeout(() => setShowNotification(true), 5000);
     } else {
       // Delay hiding to show "back online" message
-      const timer = setTimeout(() => {
-        setShowNotification(false);
-      }, 3000);
-      return () => clearTimeout(timer);
+      timer = setTimeout(() => setShowNotification(false), 3000);
     }
+    return () => clearTimeout(timer);
   }, [isBackendHealthy]);
 
   return (

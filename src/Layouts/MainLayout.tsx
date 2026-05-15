@@ -6,6 +6,7 @@ import { Sidebar } from '../components/ui/Sidebar';
 import { MobileNavigation } from '../components/ui/MobileNavigation';
 import { Spinner } from '../components/ui/Spinner';
 import { EmailVerificationBanner } from '../components/EmailVerificationBanner';
+import { OnboardingTour } from '../components/ui/OnboardingTour';
 import { cn } from '../utlis/cn';
 
 // Lazy load heavy modal components for better initial load
@@ -79,6 +80,9 @@ export const MainLayout = () => {
           />
         </Suspense>
       )}
+
+      {/* Global Onboarding Tour */}
+      <OnboardingTour />
     </div>
   );
 };

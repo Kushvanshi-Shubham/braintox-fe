@@ -85,7 +85,7 @@ export function LandingPage() {
               Never lose a thought again.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
               <button
                 onClick={() => navigate("/signup")}
                 className={cn(
@@ -116,6 +116,68 @@ export function LandingPage() {
                 Watch Demo
               </button>
             </div>
+
+            {/* Floating CSS Mockup */}
+            <motion.div
+              className="relative mx-auto mt-12 sm:mt-20 max-w-5xl perspective-1000"
+              initial={{ opacity: 0, y: 50, rotateX: 10 }}
+              animate={{ opacity: 1, y: 0, rotateX: 0 }}
+              transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+            >
+              <motion.div 
+                className="relative rounded-2xl sm:rounded-[2.5rem] bg-white/40 dark:bg-gray-900/40 backdrop-blur-xl p-2 sm:p-4 shadow-2xl border border-white/40 dark:border-gray-700/50"
+                animate={{ y: [0, -15, 0] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/10 to-pink-500/10 rounded-2xl sm:rounded-[2.5rem]" />
+                
+                {/* Mini Dashboard UI */}
+                <div className="w-full aspect-[16/10] sm:aspect-[16/9] rounded-xl sm:rounded-3xl border border-gray-200/80 dark:border-gray-800 bg-gray-50 dark:bg-gray-950 flex overflow-hidden shadow-inner relative z-20">
+                  {/* Sidebar */}
+                  <div className="hidden sm:block w-1/4 max-w-[240px] border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 space-y-6">
+                    <div className="flex items-center gap-3 mb-8">
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center">
+                        <SparklesIcon className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="h-5 w-24 bg-gray-200 dark:bg-gray-800 rounded-md"></div>
+                    </div>
+                    <div className="space-y-3">
+                      {[1, 2, 3, 4, 5].map(i => (
+                        <div key={i} className="flex items-center gap-3 opacity-70">
+                          <div className="w-5 h-5 rounded bg-gray-200 dark:bg-gray-800"></div>
+                          <div className="h-3 w-full bg-gray-200 dark:bg-gray-800 rounded-md"></div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Main content */}
+                  <div className="flex-1 p-6 sm:p-8 bg-gray-50 dark:bg-gray-950 flex flex-col">
+                    <div className="flex justify-between items-center mb-8">
+                      <div className="h-8 w-48 bg-gray-200 dark:bg-gray-800 rounded-lg"></div>
+                      <div className="flex gap-3">
+                        <div className="h-10 w-32 bg-purple-600/20 rounded-xl hidden md:block"></div>
+                        <div className="h-10 w-10 bg-purple-100 dark:bg-purple-900/30 rounded-full border border-purple-200 dark:border-purple-800"></div>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 flex-1">
+                      {[1, 2, 3, 4, 5, 6].map(i => (
+                        <div key={i} className="rounded-2xl border border-gray-200/50 dark:border-gray-800 bg-white dark:bg-gray-900 p-5 flex flex-col transition-all hover:-translate-y-1 hover:shadow-lg">
+                          <div className="h-32 bg-gray-100 dark:bg-gray-800 rounded-xl mb-4"></div>
+                          <div className="h-4 w-3/4 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+                          <div className="h-3 w-1/2 bg-gray-200 dark:bg-gray-700 rounded opacity-60"></div>
+                          <div className="flex justify-between items-center mt-auto pt-4">
+                            <div className="h-5 w-16 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-md"></div>
+                            <div className="flex gap-1">
+                              <div className="w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-800"></div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
           </motion.div>
 
           {/* Scroll indicator */}
@@ -190,70 +252,88 @@ export function LandingPage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(200px,auto)]">
             {[
               {
                 icon: BookmarkIcon,
                 title: "Save Anything",
-                description: "Bookmark links, articles, videos, and more from across the web with one click."
+                description: "Bookmark links, articles, videos, and more from across the web with one click. Built for speed and organizing at scale.",
+                className: "md:col-span-2 bg-white dark:bg-gray-800/90"
               },
               {
                 icon: TagIcon,
                 title: "Smart Tags",
-                description: "Organize content with powerful tagging system for instant search and discovery."
+                description: "Auto-tagging for instant search.",
+                className: "bg-gradient-to-br from-purple-600 to-pink-600 text-white"
               },
               {
                 icon: FolderIcon,
                 title: "Collections",
-                description: "Group related content into beautiful collections you can share with anyone."
+                description: "Group related content into beautiful folders.",
+                className: "bg-white dark:bg-gray-800/90"
               },
               {
                 icon: MagnifyingGlassIcon,
                 title: "Share & Discover",
-                description: "Explore what others are saving and share your curated collections publicly."
+                description: "Explore what others are saving and share your curated knowledge network publicly.",
+                className: "md:col-span-2 bg-gradient-to-br from-gray-900 to-gray-800 dark:from-purple-900/40 dark:to-pink-900/40 text-white"
               },
               {
                 icon: DevicePhoneMobileIcon,
                 title: "Cross-Platform",
-                description: "Access your brain from anywhere - web, mobile, and browser extensions."
+                description: "Access your brain from anywhere - web, mobile, and browser.",
+                className: "md:col-span-2 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-800/90 dark:to-gray-800/90"
               },
               {
                 icon: LockClosedIcon,
                 title: "Private & Secure",
-                description: "Your data is encrypted and secure. Choose what to share and what to keep private."
+                description: "Encrypted and secure data.",
+                className: "bg-white dark:bg-gray-800/90"
               }
             ].map((feature, index) => (
               <motion.div
                 key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
                 viewport={{ once: true }}
-                whileHover={{ y: -4, scale: 1.02 }}
+                whileHover={{ y: -4, scale: 1.01 }}
                 className={cn(
-                  "p-6 rounded-2xl",
-                  "bg-white dark:bg-gray-800/90",
+                  "p-8 rounded-3xl",
                   "border border-gray-200/50 dark:border-gray-700/50",
-                  "shadow-lg hover:shadow-xl",
+                  "shadow-lg hover:shadow-2xl",
                   "transition-all duration-300",
-                  "group"
+                  "group flex flex-col justify-between",
+                  feature.className
                 )}
               >
-                <div className={cn(
-                  "w-12 h-12 rounded-xl mb-4",
-                  "bg-gradient-to-br from-purple-100 to-pink-100",
-                  "dark:from-purple-900/30 dark:to-pink-900/30",
-                  "flex items-center justify-center",
-                  "group-hover:scale-110 transition-transform duration-300"
-                )}>
-                  <feature.icon className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                <div>
+                  <div className={cn(
+                    "w-14 h-14 rounded-2xl mb-6",
+                    feature.className.includes("text-white") 
+                      ? "bg-white/20 backdrop-blur-md" 
+                      : "bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30",
+                    "flex items-center justify-center",
+                    "group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300"
+                  )}>
+                    <feature.icon className={cn(
+                      "w-7 h-7",
+                      feature.className.includes("text-white") ? "text-white" : "text-purple-600 dark:text-purple-400"
+                    )} />
+                  </div>
+                  <h3 className={cn(
+                    "text-2xl font-bold mb-3",
+                    feature.className.includes("text-white") ? "text-white" : "text-gray-900 dark:text-white"
+                  )}>
+                    {feature.title}
+                  </h3>
+                  <p className={cn(
+                    "text-lg",
+                    feature.className.includes("text-white") ? "text-white/80" : "text-gray-600 dark:text-gray-400"
+                  )}>
+                    {feature.description}
+                  </p>
                 </div>
-                <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-400">
-                  {feature.description}
-                </p>
               </motion.div>
             ))}
           </div>
@@ -363,9 +443,9 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600" />
+      {/* Final Massive CTA */}
+      <section className="relative py-32 sm:py-48 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-purple-700 to-pink-600" />
         <div className="absolute inset-0 overflow-hidden">
           <motion.div
             className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl"
