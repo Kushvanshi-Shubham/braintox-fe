@@ -442,7 +442,7 @@ export default function Profile() {
               { label: "Followers", value: followersCount, icon: UserIcon, color: "text-green-500", bg: "bg-green-500/10" },
               { label: "Following", value: followingCount, icon: UserIcon, color: "text-orange-500", bg: "bg-orange-500/10" },
               { label: "Unique Tags", value: profile?.totalTags || 0, icon: TagIcon, color: "text-blue-500", bg: "bg-blue-500/10" },
-            ].map((stat, i) => (
+            ].map((stat) => (
               <div key={stat.label} className="text-center px-4 group">
                 <div className={`w-14 h-14 mx-auto mb-4 rounded-2xl flex items-center justify-center ${stat.bg} transition-transform group-hover:scale-110`}>
                   <stat.icon className={`w-7 h-7 ${stat.color} opacity-90`} />
