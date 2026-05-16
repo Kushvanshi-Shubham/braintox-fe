@@ -99,6 +99,7 @@ export default function KnowledgeGraph() {
   // Filter
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showHelper, setShowHelper] = useState(true);
 
   // ── Fetch ──────────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -373,9 +374,16 @@ export default function KnowledgeGraph() {
 
       <div className="flex flex-1 overflow-hidden relative">
         {/* Helper message if no links */}
-        {graphData.links.length === 0 && (
+        {graphData.links.length === 0 && showHelper && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-            <div className="bg-gray-900/80 backdrop-blur px-6 py-4 rounded-xl border border-gray-800 text-center max-w-sm">
+            <div className="bg-gray-900/80 backdrop-blur px-6 py-4 rounded-xl border border-gray-800 text-center max-w-sm pointer-events-auto relative shadow-2xl">
+              <button 
+                onClick={() => setShowHelper(false)} 
+                className="absolute top-2 right-2 text-gray-500 hover:text-white transition-colors"
+                title="Dismiss"
+              >
+                ✕
+              </button>
               <ShareIcon className="w-8 h-8 text-purple-400 mx-auto mb-2" />
               <p className="text-gray-300 text-sm">
                 Nodes are pushed apart right now. <strong className="text-white">Add the same tags</strong> to multiple items to see them connect and cluster together!
@@ -503,11 +511,12 @@ export default function KnowledgeGraph() {
         {/* ── Sliding Right panel ── */}
         <div 
           className={cn(
-            "fixed top-0 right-0 h-full w-80 bg-gray-900/90 backdrop-blur-xl border-l border-white/10 shadow-2xl transition-transform duration-300 ease-in-out z-20 flex flex-col",
-            selectedNode ? "translate-x-0" : "translate-x-full"
+            "h-full bg-gray-900/90 backdrop-blur-xl shadow-2xl transition-all duration-300 ease-in-out z-20 flex-shrink-0 overflow-hidden",
+            selectedNode ? "w-80 opacity-100 border-l border-white/10" : "w-0 opacity-0 border-none"
           )}
         >
-          {/* Selected node info */}
+          <div className="w-80 h-full flex flex-col">
+            {/* Selected node info */}
           {selectedNode && (
             <div className="p-6 border-b border-white/5 relative mt-16">
               <button 
@@ -575,6 +584,7 @@ export default function KnowledgeGraph() {
                 <span className="text-xs opacity-60 bg-white/5 px-2 py-0.5 rounded-full">{tag.count}</span>
               </button>
             ))}
+          </div>
           </div>
         </div>
       </div>
