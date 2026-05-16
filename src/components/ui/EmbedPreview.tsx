@@ -1,6 +1,6 @@
 import { useEffect, useRef, memo, useState, type ReactNode } from "react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import { getEmbedUrl, type ContentType } from "../../utlis/contentTypeDetection";
+import { getEmbedUrl, detectContentType, type ContentType } from "../../utlis/contentTypeDetection";
 import { PlatformIcon } from "../../utlis/PlatformIcon";
 import { LinkPreview } from "./LinkPreview";
 
