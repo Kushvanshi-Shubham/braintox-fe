@@ -38,8 +38,14 @@ const ErrorFallback = ({ url }: { url: string }) => (
   </div>
 );
 
-const EmbedPreviewComponent = ({ url, type, title }: EmbedPreviewProps) => {
+const EmbedPreviewComponent = ({ url, type: userType, title }: EmbedPreviewProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Auto-detect the content type from URL to ensure rich widgets (Twitter, YT) 
+  // always render even if the user saved the link under a custom category like "job"
+  const detectedType = detectContentType(url);
+  const type = detectedType !== 'other' ? detectedType : userType;
+
   const embedUrl = getEmbedUrl(url, type);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);

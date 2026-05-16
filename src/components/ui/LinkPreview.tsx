@@ -60,7 +60,8 @@ const LinkPreviewComponent = ({ url, title }: LinkPreviewProps) => {
             loading="lazy"
             decoding="async"
             onError={(e) => {
-              e.currentTarget.style.display = 'none';
+              const parent = e.currentTarget.parentElement;
+              if (parent) parent.style.display = 'none';
             }}
           />
           {/* Subtle gradient overlay for better text readability */}
