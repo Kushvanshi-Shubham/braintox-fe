@@ -9,6 +9,15 @@ import {
   FolderIcon,
   LinkIcon,
 } from "@heroicons/react/24/outline";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer
+} from 'recharts';
 
 interface OverviewData {
   totalLinks: number;
@@ -52,7 +61,6 @@ export default function Analytics() {
     );
   }
 
-  const maxActivity = activity ? Math.max(...activity.activity.map((d) => d.count), 1) : 1;
   const totalSaves30d = activity ? activity.activity.reduce((sum, d) => sum + d.count, 0) : 0;
 
   const statCards = overview
@@ -89,45 +97,83 @@ export default function Analytics() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="relative overflow-hidden rounded-xl p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm"
+              className="relative overflow-hidden rounded-3xl p-6 glass border border-purple-100 dark:border-gray-700/50 shadow-lg group hover:shadow-xl transition-all"
             >
-              <div className={`absolute top-0 right-0 w-20 h-20 -mr-4 -mt-4 rounded-full bg-gradient-to-br ${colorMap[stat.color]} opacity-10`} />
-              <stat.icon className="w-6 h-6 text-gray-400 mb-2" />
-              <p className="text-3xl font-bold text-gray-900 dark:text-white">{stat.value.toLocaleString()}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{stat.label}</p>
+              <div className={`absolute -top-10 -right-10 w-32 h-32 rounded-full bg-gradient-to-br ${colorMap[stat.color]} opacity-[0.08] group-hover:scale-110 transition-transform duration-500`} />
+              <div className="flex justify-between items-start mb-4">
+                <div className={`p-3 rounded-2xl bg-gradient-to-br ${colorMap[stat.color]} bg-opacity-10 text-white shadow-inner`}>
+                  <stat.icon className="w-6 h-6" />
+                </div>
+              </div>
+              <p className="text-4xl font-bold text-gray-900 dark:text-white mb-1 tracking-tight">{stat.value.toLocaleString()}</p>
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">{stat.label}</p>
             </motion.div>
           ))}
         </div>
 
         {/* Activity Chart */}
         {activity && (
-          <div className="rounded-xl p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm mb-8">
-            <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">30-Day Activity</h2>
-            <div className="flex items-end gap-[3px] h-32">
-              {activity.activity.map((day) => {
-                const height = day.count > 0 ? Math.max((day.count / maxActivity) * 100, 8) : 4;
-                return (
-                  <div
-                    key={day.date}
-                    className="flex-1 group relative"
-                    title={`${day.date}: ${day.count} saves`}
+          <div className="rounded-3xl p-6 md:p-8 bg-white dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 shadow-lg backdrop-blur-sm mb-8 relative overflow-hidden">
+            <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
+              <ChartBarIcon className="w-6 h-6 text-purple-500" />
+              30-Day Activity
+            </h2>
+            
+            {activity.activity.reduce((sum, d) => sum + d.count, 0) === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+                <ChartBarIcon className="w-16 h-16 mb-4 text-gray-300 dark:text-gray-600" />
+                <p className="text-lg font-medium">No activity in the last 30 days</p>
+                <p className="text-sm">Start saving links to see your stats grow!</p>
+              </div>
+            ) : (
+              <div className="h-64 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart
+                    data={activity.activity}
+                    margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
                   >
-                    <div
-                      className={`w-full rounded-t transition-all duration-200 ${
-                        day.count > 0
-                          ? "bg-gradient-to-t from-purple-600 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-400"
-                          : "bg-gray-200 dark:bg-gray-700"
-                      }`}
-                      style={{ height: `${height}%` }}
+                    <defs>
+                      <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#a855f7" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#ec4899" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(156, 163, 175, 0.2)" />
+                    <XAxis 
+                      dataKey="date" 
+                      tickFormatter={(val) => new Date(val).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                      tick={{ fill: '#9ca3af', fontSize: 12 }}
+                      axisLine={false}
+                      tickLine={false}
+                      minTickGap={30}
                     />
-                  </div>
-                );
-              })}
-            </div>
-            <div className="flex justify-between mt-2 text-xs text-gray-400">
-              <span>30 days ago</span>
-              <span>Today</span>
-            </div>
+                    <YAxis 
+                      tick={{ fill: '#9ca3af', fontSize: 12 }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)', 
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '12px',
+                        color: '#fff'
+                      }}
+                      labelFormatter={(label) => new Date(label).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="count" 
+                      stroke="#a855f7" 
+                      strokeWidth={3}
+                      fillOpacity={1} 
+                      fill="url(#colorCount)" 
+                      activeDot={{ r: 6, strokeWidth: 0, fill: '#ec4899' }}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            )}
           </div>
         )}
 

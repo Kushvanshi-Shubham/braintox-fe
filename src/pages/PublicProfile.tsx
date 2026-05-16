@@ -97,9 +97,13 @@ export default function PublicProfile() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-10"
+          className="text-center mb-10 relative"
         >
-          {profile.profilePic ? (
+          {/* Banner */}
+          <div className="absolute top-0 left-0 right-0 h-32 sm:h-40 bg-gradient-to-br from-purple-500/20 to-pink-500/20 dark:from-purple-900/40 dark:to-pink-900/40 rounded-3xl -z-10" />
+          
+          <div className="pt-16 sm:pt-20">
+            {profile.profilePic ? (
             <img
               src={profile.profilePic}
               alt={profile.username}
@@ -120,6 +124,7 @@ export default function PublicProfile() {
             <span><strong className="text-gray-900 dark:text-white">{profile.followingCount}</strong> following</span>
             <span className="hidden sm:inline">Joined {new Date(profile.joinedAt).toLocaleDateString("en-US", { month: "long", year: "numeric" })}</span>
           </div>
+          </div>
         </motion.div>
 
         {/* Stats */}
@@ -134,11 +139,11 @@ export default function PublicProfile() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="text-center p-4 rounded-xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50"
+              className="text-center p-4 sm:p-6 rounded-3xl glass-panel shadow-lg border border-purple-200/50 dark:border-purple-800/30"
             >
-              <stat.icon className="w-5 h-5 mx-auto mb-1 text-purple-500" />
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">{stat.label}</p>
+              <stat.icon className="w-6 h-6 mx-auto mb-2 text-purple-500" />
+              <p className="text-2xl sm:text-3xl font-bold gradient-text">{stat.value}</p>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider mt-1">{stat.label}</p>
             </motion.div>
           ))}
         </div>
@@ -149,7 +154,7 @@ export default function PublicProfile() {
             <h2 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Top Tags</h2>
             <div className="flex flex-wrap gap-2">
               {profile.topTags.map((tag) => (
-                <span key={tag.name} className="px-3 py-1.5 rounded-full text-sm bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/30">
+                <span key={tag.name} className="px-4 py-1.5 rounded-full text-sm font-semibold bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/30 shadow-sm">
                   #{tag.name}
                 </span>
               ))}
@@ -163,9 +168,9 @@ export default function PublicProfile() {
             <h2 className="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Collections</h2>
             <div className="grid sm:grid-cols-2 gap-3">
               {profile.collections.map((col) => (
-                <div key={col._id} className="p-4 rounded-xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50">
-                  <h3 className="font-semibold text-gray-900 dark:text-white">{col.name}</h3>
-                  {col.description && <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">{col.description}</p>}
+                <div key={col._id} className="p-5 sm:p-6 rounded-3xl glass-panel border border-gray-200/50 dark:border-gray-700/50 shadow-md hover:shadow-lg transition-all hover:-translate-y-1">
+                  <h3 className="font-bold text-gray-900 dark:text-white text-lg">{col.name}</h3>
+                  {col.description && <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 line-clamp-2">{col.description}</p>}
                 </div>
               ))}
             </div>
@@ -186,9 +191,9 @@ export default function PublicProfile() {
           <Link
             to="/signup"
             className={cn(
-              "inline-block px-8 py-3 rounded-xl font-semibold text-white",
+              "inline-block px-8 py-3.5 rounded-2xl font-bold text-white",
               "bg-gradient-to-r from-purple-600 to-pink-600",
-              "hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg"
+              "hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg shadow-purple-500/25"
             )}
           >
             Get Started Free

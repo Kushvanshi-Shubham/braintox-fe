@@ -155,8 +155,8 @@ const SocialFeed = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.4 }}
           className={cn(
-            "glass border border-purple-200/50 dark:border-purple-800/30",
-            "rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl"
+            "glass-panel border border-purple-200/50 dark:border-purple-800/30",
+            "rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl"
           )}
         >
           <div className="grid grid-cols-3 gap-3 sm:gap-6">
@@ -205,7 +205,7 @@ const SocialFeed = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.4 }}
-            className="glass border border-purple-200/50 dark:border-purple-800/30 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg"
+            className="glass-panel border border-purple-200/50 dark:border-purple-800/30 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-lg"
           >
             <h2 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2 mb-3 sm:mb-4">
               <HashtagIcon className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
@@ -284,8 +284,8 @@ const SocialFeedCard = memo(({ item, index }: { item: SocialFeedContent; index: 
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.03, duration: 0.3 }}
       className={cn(
-        "glass border border-purple-200/50 dark:border-purple-800/30",
-        "rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl",
+        "glass-panel border border-purple-200/50 dark:border-purple-800/30",
+        "rounded-2xl sm:rounded-3xl shadow-lg hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)]",
         "transition-all duration-300 overflow-hidden",
         "hover:scale-[1.01] sm:hover:scale-[1.02]"
       )}
@@ -398,7 +398,7 @@ const SocialFeedCard = memo(({ item, index }: { item: SocialFeedContent; index: 
             rel="noopener noreferrer"
             className={cn(
               "flex-1 inline-flex items-center justify-center gap-2",
-              "px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm",
+              "px-4 sm:px-6 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm uppercase tracking-wider",
               "bg-gradient-to-r from-purple-600 to-pink-600",
               "hover:from-purple-700 hover:to-pink-700",
               "text-white transition-all duration-200",
@@ -427,7 +427,7 @@ const SocialFeedCard = memo(({ item, index }: { item: SocialFeedContent; index: 
               }}
               className={cn(
                 "inline-flex items-center justify-center gap-1.5 sm:gap-2",
-                "px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm",
+                "px-4 sm:px-6 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm uppercase tracking-wider",
                 "bg-gray-100 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700",
                 "hover:bg-purple-100 dark:hover:bg-purple-900/40",
                 "text-gray-900 dark:text-purple-300 transition-all duration-200",

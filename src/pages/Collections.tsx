@@ -100,9 +100,8 @@ function SortableCollectionCard({ collection, onClick }: Readonly<SortableCollec
         className="cursor-pointer group relative"
       >
         <div
-          className="rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg hover:shadow-2xl transition-all duration-300 relative overflow-hidden"
+          className="rounded-2xl sm:rounded-3xl p-5 sm:p-7 glass-panel hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] transition-all duration-300 relative overflow-hidden group-hover:-translate-y-1"
           style={{
-            background: `linear-gradient(135deg, ${collection.color}15, ${collection.color}05)`,
             borderLeft: `4px solid ${collection.color}`,
           }}
         >
@@ -135,9 +134,9 @@ function SortableCollectionCard({ collection, onClick }: Readonly<SortableCollec
                 <div 
                   onClick={onClick}
                   className={cn(
-                    "w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center",
-                    "bg-gradient-to-br from-purple-100 to-pink-100",
-                    "dark:from-purple-900/30 dark:to-pink-900/30"
+                    "w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center",
+                    "bg-gradient-to-br from-white/60 to-white/20 shadow-sm border border-white/40",
+                    "dark:from-gray-800/60 dark:to-gray-800/20 dark:border-gray-700/50"
                   )}
                   style={{ color: collection.color }}
                 >
@@ -163,7 +162,7 @@ function SortableCollectionCard({ collection, onClick }: Readonly<SortableCollec
             </div>
 
             <div onClick={onClick}>
-              <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-1.5 sm:mb-2 line-clamp-1">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-1">
                 {collection.name}
               </h3>
 
@@ -175,7 +174,7 @@ function SortableCollectionCard({ collection, onClick }: Readonly<SortableCollec
 
               <div className="flex items-center justify-between">
                 <div
-                  className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium"
+                  className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold uppercase tracking-wider"
                   style={{ color: collection.color }}
                 >
                   <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -313,10 +312,10 @@ export default function Collections() {
             whileTap={{ scale: 0.95 }}
             onClick={() => setShowCreateModal(true)}
             className={cn(
-              "px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl font-medium shadow-lg text-sm sm:text-base",
+              "px-5 sm:px-6 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl font-semibold shadow-lg shadow-purple-500/20 text-sm sm:text-base",
               "bg-gradient-to-r from-purple-600 to-pink-600",
               "hover:from-purple-700 hover:to-pink-700",
-              "text-white transition-all flex items-center gap-1.5 sm:gap-2"
+              "text-white transition-all flex items-center gap-2"
             )}
           >
             <PlusIcon className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -335,7 +334,7 @@ export default function Collections() {
               <button
                 onClick={() => setShowCreateModal(true)}
                 className={cn(
-                  "px-6 py-3 rounded-xl font-medium shadow-lg text-base",
+                  "px-6 py-3.5 rounded-2xl font-semibold shadow-lg shadow-purple-500/20 text-base",
                   "bg-gradient-to-r from-purple-600 to-pink-600",
                   "hover:from-purple-700 hover:to-pink-700",
                   "text-white transition-all flex items-center gap-2"
@@ -382,10 +381,10 @@ export default function Collections() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-2xl rounded-2xl sm:rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-white/20 dark:border-gray-700/50"
             >
               {/* Header */}
-              <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between rounded-t-xl sm:rounded-t-2xl">
+              <div className="sticky top-0 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md border-b border-gray-200/50 dark:border-gray-700/50 px-5 sm:px-8 py-4 sm:py-5 flex items-center justify-between z-10">
                 <h2 className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                   Create New Collection
                 </h2>
@@ -413,7 +412,7 @@ export default function Collections() {
                     onChange={(e) => setName(e.target.value)}
                     placeholder="e.g., Web Development Resources"
                     maxLength={100}
-                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all"
+                    className="w-full px-4 sm:px-5 py-3 sm:py-4 border border-gray-200/80 dark:border-gray-700/80 rounded-2xl bg-gray-50/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all shadow-inner"
                   />
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     {name.length}/100 characters
@@ -431,7 +430,7 @@ export default function Collections() {
                     placeholder="What's this collection about?"
                     rows={3}
                     maxLength={500}
-                    className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none resize-none transition-all"
+                    className="w-full px-4 sm:px-5 py-3 sm:py-4 border border-gray-200/80 dark:border-gray-700/80 rounded-2xl bg-gray-50/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none resize-none transition-all shadow-inner"
                   />
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     {description.length}/500 characters
@@ -498,7 +497,7 @@ export default function Collections() {
                 </div>
 
                 {/* Privacy Toggle */}
-                <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                <div className="flex items-center justify-between p-4 sm:p-5 bg-gray-50/80 dark:bg-gray-800/80 border border-gray-200/50 dark:border-gray-700/50 rounded-2xl">
                   <div>
                     <p className="font-medium text-gray-900 dark:text-white">Private Collection</p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">Only you can see this collection</p>
@@ -518,20 +517,20 @@ export default function Collections() {
               </div>
 
               {/* Footer */}
-              <div className="sticky bottom-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-end gap-3 rounded-b-2xl">
+              <div className="sticky bottom-0 bg-white/50 dark:bg-gray-900/50 backdrop-blur-md border-t border-gray-200/50 dark:border-gray-700/50 px-6 sm:px-8 py-4 sm:py-5 flex justify-end gap-3 z-10">
                 <button
                   onClick={() => setShowCreateModal(false)}
                   disabled={creating}
-                  className="px-6 py-2.5 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors disabled:opacity-50"
+                  className="px-6 py-3 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 rounded-2xl font-semibold hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
                 >
                   Cancel
                 </button>
                 <motion.button
-                  whileHover={{ scale: creating ? 1 : 1.05 }}
-                  whileTap={{ scale: creating ? 1 : 0.95 }}
+                  whileHover={{ scale: creating ? 1 : 1.02 }}
+                  whileTap={{ scale: creating ? 1 : 0.98 }}
                   onClick={handleCreate}
                   disabled={!name.trim() || creating}
-                  className="px-6 py-2.5 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl font-semibold shadow-lg shadow-purple-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 >
                   {creating ? (
                     <>

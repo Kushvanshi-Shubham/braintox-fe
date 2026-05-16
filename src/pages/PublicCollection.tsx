@@ -79,7 +79,7 @@ export default function PublicCollection() {
           <Link to="/" className="text-xl font-bold gradient-text">Braintox</Link>
           <Link
             to="/signup"
-            className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+            className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl sm:rounded-3xl text-sm font-bold uppercase tracking-wider text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/25 transition-all"
           >
             Join Braintox
           </Link>
@@ -118,7 +118,7 @@ export default function PublicCollection() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.03 }}
-              className="block p-4 rounded-xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 hover:border-purple-300 dark:hover:border-purple-700 transition-all group"
+              className="block p-5 sm:p-6 rounded-2xl sm:rounded-3xl glass-panel border border-gray-200/50 dark:border-gray-700/50 hover:border-purple-300 dark:hover:border-purple-700 transition-all hover:shadow-lg hover:-translate-y-1 group"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
@@ -137,7 +137,7 @@ export default function PublicCollection() {
               {item.tags.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 mt-2">
                   {item.tags.map((tag) => (
-                    <span key={tag._id} className="text-xs px-2 py-0.5 rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-300">
+                    <span key={tag._id} className="text-[10px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full font-bold uppercase tracking-wider bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-300 border border-purple-200/50 dark:border-purple-800/30">
                       #{tag.name}
                     </span>
                   ))}
@@ -160,7 +160,7 @@ export default function PublicCollection() {
           <p className="text-gray-600 dark:text-gray-400 mb-6">Organize your bookmarks with AI-powered tagging.</p>
           <Link
             to="/signup"
-            className="inline-block px-8 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg"
+            className="inline-block px-8 py-3.5 rounded-2xl font-bold text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-lg shadow-purple-500/25 transition-all"
           >
             Get Started Free
           </Link>

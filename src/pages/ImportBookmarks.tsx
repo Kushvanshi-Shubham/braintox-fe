@@ -59,6 +59,7 @@ function parseBookmarkHTML(html: string): ParsedBookmark[] {
 export default function ImportBookmarks() {
   const [bookmarks, setBookmarks] = useState<ParsedBookmark[]>([]);
   const [importing, setImporting] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const [result, setResult] = useState<{
     imported: number;
     skipped: number;
@@ -66,10 +67,7 @@ export default function ImportBookmarks() {
   } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
+  function processFile(file: File) {
     if (!file.name.endsWith(".html") && !file.name.endsWith(".htm")) {
       toast.error("Please upload an HTML bookmark file.");
       return;
@@ -88,6 +86,29 @@ export default function ImportBookmarks() {
       toast.success(`Found ${parsed.length} bookmarks!`);
     };
     reader.readAsText(file);
+  }
+
+  function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    processFile(file);
+  }
+
+  function handleDragOver(e: React.DragEvent) {
+    e.preventDefault();
+    setIsDragging(true);
+  }
+
+  function handleDragLeave(e: React.DragEvent) {
+    e.preventDefault();
+    setIsDragging(false);
+  }
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) processFile(file);
   }
 
   function toggleBookmark(index: number) {
@@ -167,16 +188,25 @@ export default function ImportBookmarks() {
         {bookmarks.length === 0 && !result && (
           <motion.div
             className={cn(
-              "border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer",
-              "border-purple-300 dark:border-purple-700",
-              "hover:border-purple-500 dark:hover:border-purple-500",
-              "bg-purple-50/50 dark:bg-purple-900/10",
-              "transition-colors duration-200"
+              "border-2 border-dashed rounded-3xl p-12 text-center cursor-pointer relative overflow-hidden",
+              isDragging 
+                ? "border-purple-500 bg-purple-100 dark:bg-purple-900/30 shadow-inner" 
+                : "border-purple-300 dark:border-purple-700 hover:border-purple-500 dark:hover:border-purple-500 bg-white/50 dark:bg-purple-900/10 backdrop-blur-sm",
+              "transition-all duration-300"
             )}
-            whileHover={{ scale: 1.01 }}
+            whileHover={{ scale: 1.02 }}
             onClick={() => fileRef.current?.click()}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
           >
-            <ArrowUpTrayIcon className="w-16 h-16 mx-auto mb-4 text-purple-500" />
+            {isDragging && <div className="absolute inset-0 bg-purple-500/10 animate-pulse pointer-events-none" />}
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+            >
+              <ArrowUpTrayIcon className="w-16 h-16 mx-auto mb-4 text-purple-500 drop-shadow-md" />
+            </motion.div>
             <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
               Upload Bookmark File
             </h3>

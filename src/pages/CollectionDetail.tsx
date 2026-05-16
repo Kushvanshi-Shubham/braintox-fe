@@ -199,13 +199,13 @@ const CollectionDetail = () => {
                 </div>
               ) : (
                 <div
-                  className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg flex-shrink-0"
+                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl flex items-center justify-center flex-shrink-0 shadow-lg"
                   style={{ backgroundColor: collection.color }}
                 >
                   {(() => {
                     const found = ICON_OPTIONS.find(o => o.name === collection.icon);
                     const Icon = found?.component ?? FolderIcon;
-                    return <Icon className="w-6 h-6 sm:w-8 sm:h-8 text-white" />;
+                    return <Icon className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                   })()}
                 </div>
               )}
@@ -327,7 +327,7 @@ const CollectionDetail = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-2xl shadow-lg p-8 sm:p-12 text-center"
+            className="glass-panel p-6 sm:p-8 md:p-10 rounded-3xl shadow-2xl relative overflow-hidden text-center"
           >
             <div className="text-4xl sm:text-6xl mb-3 sm:mb-4 flex justify-center">
               <InboxIcon className="w-16 h-16 sm:w-24 sm:h-24 text-gray-400" />

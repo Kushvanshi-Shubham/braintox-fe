@@ -238,8 +238,8 @@ export const ActivityFeed = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.4 }}
           className={cn(
-            "glass border border-purple-200/50 dark:border-purple-800/30",
-            "rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl mb-4 sm:mb-6 md:mb-8"
+            "glass-panel border border-purple-200/50 dark:border-purple-800/30",
+            "rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-xl mb-4 sm:mb-6 md:mb-8"
           )}
         >
           <div className="grid grid-cols-3 gap-3 sm:gap-6">
@@ -265,7 +265,7 @@ export const ActivityFeed = () => {
           transition={{ delay: 0.2, duration: 0.4 }}
           className="mb-4 sm:mb-6"
         >
-          <div className="flex gap-1.5 sm:gap-2 flex-wrap glass border border-purple-200/50 dark:border-purple-800/30 p-1.5 sm:p-2 rounded-lg sm:rounded-xl shadow-lg">
+          <div className="flex gap-1.5 sm:gap-2 flex-wrap glass-panel p-1.5 sm:p-2 rounded-2xl shadow-lg">
             {FILTER_TABS.map((tab) => {
               const TabIcon = tab.IconComponent;
               return (
@@ -273,7 +273,7 @@ export const ActivityFeed = () => {
                   key={tab.value}
                   onClick={() => setFilter(tab.value)}
                   className={cn(
-                    "flex-1 px-2 sm:px-4 py-1.5 sm:py-2 rounded-md sm:rounded-lg font-medium text-xs sm:text-sm transition-all flex items-center justify-center gap-1 sm:gap-2",
+                    "flex-1 px-3 sm:px-5 py-2 sm:py-3 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-1 sm:gap-2",
                     filter === tab.value
                       ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md"
                       : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -298,8 +298,8 @@ export const ActivityFeed = () => {
             >
               <div className={cn(
                 "flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3",
-                "glass border border-purple-300/50 dark:border-purple-700/50",
-                "rounded-xl sm:rounded-2xl p-3 sm:p-5 shadow-lg"
+                "glass-panel border border-purple-300/50 dark:border-purple-700/50",
+                "rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-lg"
               )}>
                 <div className="flex items-center gap-2 sm:gap-3">
                   <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-gradient-to-r from-purple-600 to-pink-600">
@@ -340,7 +340,7 @@ export const ActivityFeed = () => {
             transition={{ duration: 0.3 }}
             className="text-center py-16"
           >
-            <div className="glass border border-purple-200/50 dark:border-purple-800/30 rounded-2xl p-12 shadow-lg">
+            <div className="glass-panel border border-purple-200/50 dark:border-purple-800/30 rounded-3xl p-12 shadow-lg">
               <div className={cn(
                 "w-20 h-20 mx-auto mb-6 rounded-full",
                 "bg-gradient-to-br from-purple-100 to-pink-100",
@@ -387,7 +387,7 @@ export const ActivityFeed = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className="flex justify-center items-center gap-4 mt-8 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700"
+            className="flex justify-center items-center gap-4 mt-8 glass-panel p-5 rounded-3xl shadow-lg border border-gray-200/50 dark:border-gray-700/50"
           >
             <Button
               onClick={() => setPage(p => p - 1)}
@@ -403,10 +403,10 @@ export const ActivityFeed = () => {
                   key={i + 1}
                   onClick={() => setPage(i + 1)}
                   className={`
-                    w-8 h-8 rounded-lg font-semibold transition-all
+                    w-10 h-10 rounded-xl font-bold transition-all
                     ${page === i + 1
-                      ? "bg-purple-600 text-white shadow-md"
-                      : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/20"
+                      : "text-gray-600 dark:text-gray-400 hover:bg-white/50 dark:hover:bg-gray-700/50"
                     }
                   `}
                 >
@@ -457,11 +457,11 @@ const NotificationCard = memo(({
       transition={{ duration: 0.3, delay: index * 0.03 }}
       onClick={() => onClick(notification)}
       className={cn(
-        "group relative overflow-hidden rounded-2xl border cursor-pointer",
-        "transition-all duration-300 hover:shadow-xl hover:-translate-y-1",
+        "group relative overflow-hidden rounded-3xl cursor-pointer",
+        "transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:-translate-y-1",
         notification.isRead
-          ? "glass border-gray-200/50 dark:border-gray-700/50"
-          : "glass border-purple-300/50 dark:border-purple-600/50 shadow-md"
+          ? "glass-panel border border-gray-200/50 dark:border-gray-700/50"
+          : "glass-panel border border-purple-300/50 dark:border-purple-600/50 shadow-md"
       )}
     >
       {/* Gradient overlay on hover */}
@@ -508,7 +508,7 @@ const NotificationCard = memo(({
           </p>
 
           {notification.contentId && (
-            <div className="mb-2 p-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+            <div className="mb-2 p-3 bg-white/50 dark:bg-gray-800/50 rounded-2xl border border-gray-200/50 dark:border-gray-700/50 shadow-inner">
               <p className="text-sm font-medium text-gray-900 dark:text-white flex items-center gap-2">
                 <FeedIcon className="w-4 h-4 text-purple-500" />
                 {notification.contentId.title}

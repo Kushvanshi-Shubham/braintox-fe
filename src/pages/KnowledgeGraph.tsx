@@ -339,11 +339,11 @@ export default function KnowledgeGraph() {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-wrap items-center gap-3 px-4 py-3 bg-gray-900/80 backdrop-blur border-b border-gray-800 z-10"
+        className="flex flex-wrap items-center gap-3 px-4 sm:px-6 py-4 bg-gray-950/60 backdrop-blur-md border-b border-white/5 z-10 absolute top-0 left-0 right-0"
       >
         <div>
-          <h1 className="text-lg font-bold gradient-text">Knowledge Graph</h1>
-          <p className="text-xs text-gray-400">
+          <h1 className="text-xl font-bold text-white tracking-tight">Knowledge Graph</h1>
+          <p className="text-xs text-gray-400 font-medium">
             {graphData.stats.totalNodes} nodes · {graphData.stats.totalLinks} connections
           </p>
         </div>
@@ -393,7 +393,7 @@ export default function KnowledgeGraph() {
           onMouseLeave={handleSvgMouseUp}
           onMouseDown={handleSvgMouseDown}
           onWheel={handleWheel}
-          style={{ background: "radial-gradient(ellipse at center, #1a1030 0%, #0a0a0f 100%)" }}
+          style={{ background: "#0a0a0f" }}
         >
           <defs>
             {/* Glow filter */}
@@ -422,9 +422,10 @@ export default function KnowledgeGraph() {
                     y1={l.source.y}
                     x2={l.target.x}
                     y2={l.target.y}
-                    stroke={isHighlighted ? "#c4b5fd" : "rgba(167, 139, 250, 0.25)"}
-                    strokeWidth={isHighlighted ? l.weight + 2 : Math.min(l.weight, 4)}
-                    strokeOpacity={isHighlighted ? 1 : 0.8}
+                    stroke={isHighlighted ? "#a855f7" : "rgba(255, 255, 255, 0.08)"}
+                    strokeWidth={isHighlighted ? l.weight + 1.5 : Math.min(l.weight, 2)}
+                    strokeOpacity={isHighlighted ? 0.9 : 1}
+                    style={{ transition: "stroke 0.3s, stroke-width 0.3s" }}
                   />
                 );
               })}
@@ -499,20 +500,28 @@ export default function KnowledgeGraph() {
           </g>
         </svg>
 
-        {/* ── Right panel ── */}
-        <div className="hidden lg:flex flex-col w-64 bg-gray-900/80 backdrop-blur border-l border-gray-800 overflow-y-auto">
+        {/* ── Sliding Right panel ── */}
+        <div 
+          className={cn(
+            "fixed top-0 right-0 h-full w-80 bg-gray-900/90 backdrop-blur-xl border-l border-white/10 shadow-2xl transition-transform duration-300 ease-in-out z-20 flex flex-col",
+            selectedNode ? "translate-x-0" : "translate-x-full"
+          )}
+        >
           {/* Selected node info */}
-          {selectedNode ? (
-            <motion.div
-              key={selectedNode.id}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="p-4 border-b border-gray-800"
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <PlatformIcon type={selectedNode.type as ContentType} className="w-5 h-5" />
+          {selectedNode && (
+            <div className="p-6 border-b border-white/5 relative mt-16">
+              <button 
+                onClick={() => setSelectedNode(null)}
+                className="absolute top-4 right-4 text-gray-500 hover:text-white transition-colors"
+              >
+                ✕
+              </button>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-xl bg-white/5">
+                  <PlatformIcon type={selectedNode.type as ContentType} className="w-6 h-6" />
+                </div>
                 <span
-                  className="text-xs font-bold uppercase px-2 py-0.5 rounded-full"
+                  className="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"
                   style={{
                     backgroundColor: typeColor(selectedNode.type) + "22",
                     color: typeColor(selectedNode.type),
@@ -521,65 +530,51 @@ export default function KnowledgeGraph() {
                   {selectedNode.type}
                 </span>
               </div>
-              <p className="text-sm font-semibold text-white mb-1 leading-snug">{selectedNode.title}</p>
-              <p className="text-xs text-gray-400 mb-3">{selectedNode.connectionCount} connections</p>
-              <a
-                href={selectedNode.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full text-center px-3 py-2 rounded-lg text-xs font-semibold bg-purple-600 hover:bg-purple-500 text-white transition-colors"
-              >
-                Open Link ↗
-              </a>
-              <button
-                onClick={() => setSelectedNode(null)}
-                className="mt-2 block w-full text-center px-3 py-1.5 rounded-lg text-xs text-gray-400 hover:bg-gray-800 transition-colors"
-              >
-                Clear selection
-              </button>
-            </motion.div>
-          ) : (
-            <div className="p-4 border-b border-gray-800">
-              <p className="text-xs text-gray-500">Click a node to inspect it</p>
+              <h2 className="text-xl font-bold text-white mb-2 leading-tight">{selectedNode.title}</h2>
+              <p className="text-sm text-gray-400 mb-6">{selectedNode.connectionCount} connections in your graph</p>
+              
+              <div className="space-y-3">
+                <a
+                  href={selectedNode.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl text-sm font-semibold bg-white text-gray-900 hover:bg-gray-200 transition-colors"
+                >
+                  Open Link <ShareIcon className="w-4 h-4" />
+                </a>
+              </div>
             </div>
           )}
 
-          {/* Tag filter */}
-          <div className="p-4">
-            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
-              Filter by tag
+          {/* Tag filter & Stats (Shows when open but could be useful generally) */}
+          <div className="p-6 flex-1 overflow-y-auto">
+            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">
+              Graph Filters
             </h3>
             <button
               onClick={() => setActiveTag(null)}
               className={cn(
-                "w-full text-left px-3 py-1.5 rounded-lg text-xs mb-1 transition-colors",
-                !activeTag ? "bg-purple-600 text-white" : "text-gray-400 hover:bg-gray-800"
+                "w-full text-left px-4 py-2 rounded-xl text-sm font-medium mb-2 transition-all",
+                !activeTag ? "bg-purple-600/20 text-purple-400 border border-purple-500/30" : "text-gray-400 hover:bg-white/5 border border-transparent"
               )}
             >
-              All tags
+              All Tags
             </button>
             {graphData.topTags.map(tag => (
               <button
                 key={tag.name}
                 onClick={() => setActiveTag(activeTag === tag.name ? null : tag.name)}
                 className={cn(
-                  "w-full text-left px-3 py-1.5 rounded-lg text-xs mb-1 transition-colors flex justify-between items-center",
+                  "w-full flex justify-between items-center px-4 py-2 rounded-xl text-sm font-medium mb-2 transition-all",
                   activeTag === tag.name
-                    ? "bg-purple-600 text-white"
-                    : "text-gray-400 hover:bg-gray-800"
+                    ? "bg-purple-600/20 text-purple-400 border border-purple-500/30"
+                    : "text-gray-400 hover:bg-white/5 border border-transparent"
                 )}
               >
                 <span>#{tag.name}</span>
-                <span className="opacity-60">{tag.count}</span>
+                <span className="text-xs opacity-60 bg-white/5 px-2 py-0.5 rounded-full">{tag.count}</span>
               </button>
             ))}
-          </div>
-
-          {/* Legend */}
-          <div className="p-4 mt-auto border-t border-gray-800">
-            <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Legend</h3>
-            <p className="text-xs text-gray-500 mb-2">Node size = connections</p>
-            <p className="text-xs text-gray-500">Node color = content type</p>
           </div>
         </div>
       </div>

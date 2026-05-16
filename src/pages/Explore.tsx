@@ -206,23 +206,25 @@ const Explore = () => {
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.3 }}
-                      className="glass border border-purple-200/50 dark:border-purple-800/30 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg"
+                      className="glass-panel p-4 sm:p-6 shadow-lg relative overflow-hidden"
                     >
+                      <div className="absolute -right-10 -top-10 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl" />
                       <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 flex items-center gap-2">
                         <ChartBarIcon className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
                         Activity Overview
                       </h3>
                       <div className="space-y-2 sm:space-y-3">
                         <div className="flex justify-between items-center">
-                          <span className="text-sm sm:text-base text-gray-600 dark:text-gray-400">This Week</span>
-                          <span className="text-xl sm:text-2xl font-bold gradient-text">
-                            {discoveryData.weeklyContent}
+                          <span className="text-sm sm:text-base text-gray-600 dark:text-gray-400 font-medium">This Week</span>
+                          <span className="text-2xl sm:text-3xl font-bold gradient-text">
+                            {discoveryData.weeklyContent || 0}
                           </span>
                         </div>
+                        <div className="w-full h-px bg-gray-200 dark:bg-gray-700/50 my-2" />
                         <div className="flex justify-between items-center">
-                          <span className="text-sm sm:text-base text-gray-600 dark:text-gray-400">This Month</span>
-                          <span className="text-xl sm:text-2xl font-bold gradient-text">
-                            {discoveryData.monthlyContent}
+                          <span className="text-sm sm:text-base text-gray-600 dark:text-gray-400 font-medium">This Month</span>
+                          <span className="text-2xl sm:text-3xl font-bold gradient-text">
+                            {discoveryData.monthlyContent || 0}
                           </span>
                         </div>
                       </div>
@@ -232,28 +234,35 @@ const Explore = () => {
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.1, duration: 0.3 }}
-                      className="glass border border-purple-200/50 dark:border-purple-800/30 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg"
+                      className="glass-panel p-4 sm:p-6 shadow-lg relative overflow-hidden group"
                     >
+                      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5" />
                       <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 flex items-center gap-2">
                         <CubeIcon className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
                         Rediscover
                       </h3>
                       {discoveryData.randomItem ? (
-                        <div>
-                          <h4 className="font-medium text-gray-900 dark:text-white mb-2 line-clamp-2">
+                        <div className="relative z-10 flex flex-col h-[calc(100%-2rem)]">
+                          <h4 className="font-bold text-lg text-gray-900 dark:text-white mb-2 line-clamp-2 leading-tight group-hover:text-purple-500 transition-colors">
                             {discoveryData.randomItem.title}
                           </h4>
                           <a
                             href={discoveryData.randomItem.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-sm text-purple-600 dark:text-purple-400 hover:underline line-clamp-1"
+                            className="text-sm text-gray-500 hover:text-purple-600 dark:hover:text-purple-400 hover:underline line-clamp-1 mb-auto"
                           >
                             {discoveryData.randomItem.link}
                           </a>
-                          <span className="inline-flex items-center gap-1 mt-2 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: getPlatformMeta(discoveryData.randomItem.type as ContentType).color }}>
-                            <PlatformIcon type={discoveryData.randomItem.type as ContentType} className="w-3 h-3" /> {discoveryData.randomItem.type}
-                          </span>
+                          <div className="mt-4 flex items-center justify-between">
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold shadow-sm" style={{ backgroundColor: getPlatformMeta(discoveryData.randomItem.type as ContentType).color, color: '#fff' }}>
+                              <PlatformIcon type={discoveryData.randomItem.type as ContentType} className="w-3.5 h-3.5" /> 
+                              <span className="capitalize">{discoveryData.randomItem.type}</span>
+                            </span>
+                            <span className="text-xs text-purple-600 dark:text-purple-400 font-semibold flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              Open <ShareIcon className="w-3 h-3" />
+                            </span>
+                          </div>
                         </div>
                       ) : (
                         <p className="text-gray-500 dark:text-gray-400">No content to rediscover yet</p>
@@ -266,29 +275,35 @@ const Explore = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2, duration: 0.3 }}
-                    className="glass border border-purple-200/50 dark:border-purple-800/30 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg"
+                    className="glass-panel p-4 sm:p-6 shadow-lg"
                   >
                     <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4">
                       Content by Type
                     </h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-                      {discoveryData.typeBreakdown.map((item) => (
-                        <div
-                          key={item._id}
-                          className="glass border border-gray-200/50 dark:border-gray-700/50 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center"
-                        >
-                          <div className="flex justify-center mb-1 sm:mb-2">
-                            <PlatformIcon type={item._id as ContentType} className="w-6 h-6 sm:w-8 sm:h-8" />
+                    {discoveryData.typeBreakdown.length > 0 ? (
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+                        {discoveryData.typeBreakdown.map((item) => (
+                          <div
+                            key={item._id}
+                            className="glass border border-gray-200/50 dark:border-gray-700/50 rounded-xl sm:rounded-2xl p-4 sm:p-5 text-center hover:shadow-md transition-shadow group"
+                          >
+                            <div className="flex justify-center mb-2 sm:mb-3">
+                              <PlatformIcon type={item._id as ContentType} className="w-8 h-8 sm:w-10 sm:h-10 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all" />
+                            </div>
+                            <div className="text-2xl sm:text-3xl font-bold gradient-text">
+                              {item.count}
+                            </div>
+                            <div className="text-xs sm:text-sm font-semibold text-gray-500 dark:text-gray-400 capitalize truncate tracking-wide mt-1">
+                              {item._id}
+                            </div>
                           </div>
-                          <div className="text-lg sm:text-2xl font-bold gradient-text">
-                            {item.count}
-                          </div>
-                          <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 capitalize truncate">
-                            {item._id}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <p className="text-gray-500 dark:text-gray-400">No content types found. Start saving some links!</p>
+                      </div>
+                    )}
                   </motion.div>
 
                   {/* Tag Cloud */}
@@ -296,7 +311,7 @@ const Explore = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3, duration: 0.3 }}
-                    className="glass border border-purple-200/50 dark:border-purple-800/30 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-lg"
+                    className="glass-panel p-4 sm:p-6 shadow-lg"
                   >
                     <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4 flex items-center gap-2">
                       <HashtagIcon className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600 dark:text-purple-400" />
@@ -378,24 +393,24 @@ const Explore = () => {
               transition={{ duration: 0.3 }}
             >
               {/* Search Bar */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg p-3 sm:p-4 shadow-lg mb-4 sm:mb-6">
+              <div className="glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-lg mb-4 sm:mb-6">
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                   <div className="flex-1 relative">
-                    <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+                    <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                     <input
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Search with filters..."
-                      className="w-full pl-9 sm:pl-10 pr-3 sm:pr-4 py-2.5 sm:py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm sm:text-base"
+                      className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-3 sm:py-4 border border-gray-200/50 dark:border-gray-700/50 rounded-2xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm sm:text-base outline-none shadow-inner"
                     />
                   </div>
                   <button
                     onClick={() => setShowFilters(!showFilters)}
-                    className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium transition-colors text-sm sm:text-base ${
+                    className={`px-5 sm:px-6 py-3 sm:py-4 rounded-2xl font-semibold transition-all text-sm sm:text-base shadow-sm ${
                       showFilters
-                        ? "bg-purple-600 text-white"
-                        : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
+                        ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-purple-500/25"
+                        : "bg-white/50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-600"
                     }`}
                   >
                     Filters {showFilters ? "▲" : "▼"}
@@ -421,7 +436,7 @@ const Explore = () => {
                       <select
                         value={selectedType}
                         onChange={(e) => { setSelectedType(e.target.value); setCurrentPage(1); }}
-                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                        className="w-full px-4 py-3 border border-gray-200/50 dark:border-gray-700/50 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-purple-500"
                       >
                         <option value="">All Types</option>
                         {filters.types.map((type) => (
@@ -442,10 +457,10 @@ const Explore = () => {
                           <button
                             key={tag._id}
                             onClick={() => toggleTag(tag._id)}
-                            className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                            className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all shadow-sm ${
                               selectedTags.includes(tag._id)
-                                ? "bg-purple-600 text-white"
-                                : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
+                                ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-purple-500/25"
+                                : "bg-white/50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-600"
                             }`}
                           >
                             #{tag.name}
@@ -464,7 +479,7 @@ const Explore = () => {
                           type="date"
                           value={startDate}
                           onChange={(e) => { setStartDate(e.target.value); setCurrentPage(1); }}
-                          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                          className="w-full px-4 py-3 border border-gray-200/50 dark:border-gray-700/50 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-purple-500"
                         />
                       </div>
                       <div>
@@ -475,7 +490,7 @@ const Explore = () => {
                           type="date"
                           value={endDate}
                           onChange={(e) => { setEndDate(e.target.value); setCurrentPage(1); }}
-                          className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                          className="w-full px-4 py-3 border border-gray-200/50 dark:border-gray-700/50 rounded-xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-purple-500"
                         />
                       </div>
                     </div>
@@ -496,10 +511,11 @@ const Explore = () => {
                         key={item._id}
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+                        className="glass-panel rounded-2xl sm:rounded-3xl shadow-lg overflow-hidden hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-300 group hover:-translate-y-1"
                       >
-                        <div className="p-6">
-                          <div className="flex items-start justify-between mb-3">
+                        <div className="p-5 sm:p-6 relative z-10">
+                          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                          <div className="flex items-start justify-between mb-4 relative z-10">
                             <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold" style={{ backgroundColor: getPlatformMeta(item.type as ContentType).color }}>
                               <PlatformIcon type={item.type as ContentType} className="w-3 h-3" /> {item.type}
                             </span>
@@ -521,7 +537,7 @@ const Explore = () => {
                               {item.tags.slice(0, 3).map((tag) => (
                                 <span
                                   key={tag._id}
-                                  className="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 rounded text-xs"
+                                  className="px-2.5 py-1 bg-purple-50/80 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-full text-[10px] font-bold uppercase tracking-wider border border-purple-100 dark:border-purple-800/50"
                                 >
                                   #{tag.name}
                                 </span>
@@ -548,17 +564,17 @@ const Explore = () => {
                       <button
                         onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                         disabled={currentPage === 1}
-                        className="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700"
+                        className="px-5 py-2.5 rounded-xl glass-panel font-semibold text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/50 dark:hover:bg-gray-700/50 transition-colors"
                       >
                         Previous
                       </button>
-                      <span className="px-4 py-2 text-gray-700 dark:text-gray-300">
+                      <span className="px-5 py-2.5 font-bold text-gray-700 dark:text-gray-300">
                         Page {currentPage} of {totalPages}
                       </span>
                       <button
                         onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                         disabled={currentPage === totalPages}
-                        className="px-4 py-2 rounded-lg bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700"
+                        className="px-5 py-2.5 rounded-xl glass-panel font-semibold text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/50 dark:hover:bg-gray-700/50 transition-colors"
                       >
                         Next
                       </button>

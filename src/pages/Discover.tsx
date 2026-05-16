@@ -160,53 +160,64 @@ export default function Discover() {
                   "hover:border-purple-400 dark:hover:border-purple-500"
                 )}
               >
+                {/* Card Banner */}
+                <div className="absolute top-0 left-0 right-0 h-20 sm:h-24 bg-gradient-to-br from-purple-500/20 to-pink-500/20 dark:from-purple-900/40 dark:to-pink-900/40" />
+
                 {/* User Avatar and Info */}
-                <div className="flex flex-col items-center text-center mb-3 sm:mb-4">
+                <div className="relative flex flex-col items-center text-center mt-6 sm:mt-8 mb-3 sm:mb-4">
                   <button
                     onClick={() => navigate(`/user/${user._id}`)}
-                    className="mb-3 sm:mb-4 hover:scale-105 transition-transform duration-200"
+                    className="mb-3 sm:mb-4 hover:scale-105 transition-transform duration-200 z-10"
                   >
-                    <Avatar
-                      profilePic={user.profilePic}
-                      username={user.username}
-                      size="lg"
-                      showOnlineIndicator={false}
-                    />
+                    <div className="p-1 rounded-full bg-white dark:bg-gray-800 shadow-md">
+                      <Avatar
+                        profilePic={user.profilePic || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=a855f7&color=fff&bold=true`}
+                        username={user.username}
+                        size="lg"
+                        showOnlineIndicator={false}
+                      />
+                    </div>
                   </button>
 
                   <button
                     onClick={() => navigate(`/user/${user._id}`)}
-                    className="text-base sm:text-lg md:text-xl font-bold gradient-text hover:opacity-80 transition-opacity mb-1"
+                    className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 dark:text-white hover:text-purple-600 dark:hover:text-purple-400 transition-colors mb-1 z-10"
                   >
                     {user.username}
                   </button>
 
-                  {user.bio && (
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 italic line-clamp-2 mb-3 sm:mb-4 px-2">
-                      "{user.bio}"
+                  {user.bio ? (
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 line-clamp-2 px-4 h-8 sm:h-10 z-10">
+                      {user.bio}
+                    </p>
+                  ) : (
+                    <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500 italic line-clamp-2 px-4 h-8 sm:h-10 z-10">
+                      No bio yet
                     </p>
                   )}
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4 sm:mb-5 py-3 sm:py-4 border-y border-gray-200/50 dark:border-gray-700/50 rounded-lg">
+                <div className="flex justify-center items-center gap-4 sm:gap-6 mb-4 sm:mb-6 py-3 border-y border-gray-100 dark:border-gray-700/50">
                   <div className="text-center">
-                    <p className="text-lg sm:text-xl md:text-2xl font-bold gradient-text">
+                    <p className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
                       {user.contentCount}
                     </p>
-                    <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 font-medium">Saves</p>
+                    <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider font-semibold">Saves</p>
                   </div>
+                  <div className="h-8 w-px bg-gray-200 dark:bg-gray-700" />
                   <div className="text-center">
-                    <p className="text-lg sm:text-xl md:text-2xl font-bold gradient-text">
+                    <p className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
                       {user.followersCount}
                     </p>
-                    <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 font-medium">Followers</p>
+                    <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider font-semibold">Followers</p>
                   </div>
+                  <div className="h-8 w-px bg-gray-200 dark:bg-gray-700" />
                   <div className="text-center">
-                    <p className="text-lg sm:text-xl md:text-2xl font-bold gradient-text">
+                    <p className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
                       {user.followingCount}
                     </p>
-                    <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 font-medium">Following</p>
+                    <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider font-semibold">Following</p>
                   </div>
                 </div>
 
@@ -214,7 +225,7 @@ export default function Discover() {
                 <FollowButton
                   userId={user._id}
                   username={user.username}
-                  className="w-full"
+                  className="w-full btn-gradient py-2 rounded-xl"
                 />
               </motion.div>
             ))}

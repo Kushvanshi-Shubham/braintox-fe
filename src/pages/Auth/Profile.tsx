@@ -205,50 +205,56 @@ export default function Profile() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-lg shadow-lg p-4 sm:p-8 mb-4 sm:mb-6"
+          className="glass-panel border border-purple-200/50 dark:border-purple-800/30 rounded-2xl sm:rounded-3xl shadow-xl p-5 sm:p-8 mb-4 sm:mb-6 relative overflow-hidden"
         >
-          <div className="flex flex-col md:flex-row items-center gap-4 sm:gap-6">
+          {/* Banner */}
+          <div className="absolute top-0 left-0 right-0 h-32 sm:h-40 bg-gradient-to-br from-purple-500/20 to-pink-500/20 dark:from-purple-900/40 dark:to-pink-900/40 -z-10" />
+
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-4 sm:gap-6 pt-16 sm:pt-20">
             {/* Profile Picture */}
-            <Avatar
-              profilePic={profile?.profilePic}
-              username={profile?.username || 'User'}
-              size="xl"
-              showOnlineIndicator={true}
-            />
+            <div className="relative">
+              <div className="rounded-full p-1 bg-white dark:bg-gray-800 shadow-xl">
+                <Avatar
+                  profilePic={profile?.profilePic}
+                  username={profile?.username || 'User'}
+                  size="xl"
+                  showOnlineIndicator={true}
+                />
+              </div>
+            </div>
 
             {/* User Info */}
-            <div className="flex-1 text-center md:text-left">
-              <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2 justify-center md:justify-start">
-                <UserIcon className="w-6 h-6 sm:w-8 sm:h-8 text-purple-600 dark:text-purple-400" />
+            <div className="flex-1 text-center md:text-left mt-2 md:mt-4">
+              <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2 flex items-center justify-center md:justify-start gap-2">
                 {profile?.username}
               </h1>
-              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-2">{profile?.email}</p>
-              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 flex items-center gap-2 justify-center md:justify-start">
-                <CalendarIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                <span className="hidden sm:inline">Member since </span>
+              <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 font-medium mb-1">{profile?.email}</p>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 flex items-center justify-center md:justify-start gap-1">
+                <CalendarIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Joined </span>
                 {profile?.joinedAt ? new Date(profile.joinedAt).toLocaleDateString("en-US", { year: 'numeric', month: 'long' }) : 'N/A'}
               </p>
               {!editMode && profile?.bio && (
-                <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 mt-3 italic line-clamp-2 sm:line-clamp-none">"{profile.bio}"</p>
+                <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 mt-4 max-w-2xl text-center md:text-left mx-auto md:mx-0 leading-relaxed">"{profile.bio}"</p>
               )}
             </div>
 
             {/* Edit/Logout Buttons */}
-            <div className="flex flex-row sm:flex-col gap-2 w-full sm:w-auto">
+            <div className="flex flex-row md:flex-col gap-3 w-full md:w-auto mt-6 md:mt-4 justify-center md:justify-start">
               {!editMode ? (
                 <>
                   <Button
                     onClick={() => setEditMode(true)}
                     variant="primary"
-                    text="Edit"
-                    className="flex-1 sm:flex-none bg-purple-600 hover:bg-purple-700 text-white text-sm sm:text-base"
+                    text="Edit Profile"
+                    className="flex-1 md:flex-none rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg shadow-purple-500/25 px-6 py-2.5"
                   />
                   <Button
                     onClick={logout}
                     variant="ghost"
                     text=""
                     startIcon={<LogOutIcon className="w-4 h-4" />}
-                    className="flex-1 sm:flex-none text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 border border-red-300 dark:border-red-700"
+                    className="flex-1 md:flex-none rounded-2xl text-red-600 dark:text-red-400 hover:bg-red-50/50 dark:hover:bg-red-900/20 border border-red-200 dark:border-red-800/30 shadow-sm"
                   />
                 </>
               ) : (
@@ -265,15 +271,15 @@ export default function Profile() {
                     Save Changes
                   </motion.button>
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={() => {
                       setEditMode(false);
                       setProfilePicUrl(profile?.profilePic || "");
                       setBio(profile?.bio || "");
                       setImagePreview(null);
                     }}
-                    className="px-6 py-2.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg font-medium flex items-center gap-2 transition-all"
+                    className="px-6 py-3 bg-gray-200/50 dark:bg-gray-700/50 hover:bg-gray-300/50 dark:hover:bg-gray-600/50 text-gray-700 dark:text-gray-300 rounded-2xl font-bold flex items-center gap-2 transition-all backdrop-blur-md"
                   >
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -392,17 +398,17 @@ export default function Profile() {
 
               {/* Bio */}
               <div>
-                <label className="block text-sm font-medium bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-2">
-                  Bio
-                </label>
-                <textarea
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  placeholder="Tell us about yourself... What makes you unique?"
-                  rows={4}
-                  maxLength={500}
-                  className="w-full px-4 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none resize-none transition-all"
-                />
+                  <label className="block text-sm font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3 uppercase tracking-wider">
+                    Bio
+                  </label>
+                  <textarea
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                    placeholder="Tell us about yourself... What makes you unique?"
+                    rows={4}
+                    maxLength={500}
+                    className="w-full px-5 py-4 border border-gray-200/50 dark:border-gray-700/50 rounded-2xl bg-white/50 dark:bg-gray-800/50 text-gray-900 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none resize-none transition-all shadow-inner"
+                  />
                 <div className="flex items-center justify-between mt-2">
                   <p className="text-xs text-gray-500 dark:text-gray-400 italic flex items-center gap-1">
                     <LightBulbIcon className="w-3.5 h-3.5 flex-shrink-0" /> Tip: Share your interests, expertise, or what you're learning
@@ -423,109 +429,30 @@ export default function Profile() {
         </motion.div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-6 mb-4 sm:mb-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.05 }}
-            className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-lg shadow-lg p-3 sm:p-6 cursor-default border border-yellow-200 dark:border-yellow-900/50"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm font-medium">Brain Power</p>
-                <p className="text-2xl sm:text-4xl font-bold text-yellow-600 dark:text-yellow-400 mt-1 sm:mt-2 flex items-center gap-1">
-                  {profile?.brainPower || 0}
-                </p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="glass-panel border border-purple-200/50 dark:border-purple-800/30 rounded-3xl shadow-xl p-6 sm:p-8 mb-6"
+        >
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-y-8 divide-x-0 md:divide-x divide-gray-200 dark:divide-gray-700">
+            {[
+              { label: "Brain Power", value: profile?.brainPower || 0, icon: FireIcon, color: "text-yellow-500", bg: "bg-yellow-500/10" },
+              { label: "Total Saves", value: profile?.contentCount || 0, icon: ArchiveIcon, color: "text-purple-500", bg: "bg-purple-500/10" },
+              { label: "Followers", value: followersCount, icon: UserIcon, color: "text-green-500", bg: "bg-green-500/10" },
+              { label: "Following", value: followingCount, icon: UserIcon, color: "text-orange-500", bg: "bg-orange-500/10" },
+              { label: "Unique Tags", value: profile?.totalTags || 0, icon: TagIcon, color: "text-blue-500", bg: "bg-blue-500/10" },
+            ].map((stat, i) => (
+              <div key={stat.label} className="text-center px-4 group">
+                <div className={`w-14 h-14 mx-auto mb-4 rounded-2xl flex items-center justify-center ${stat.bg} transition-transform group-hover:scale-110`}>
+                  <stat.icon className={`w-7 h-7 ${stat.color} opacity-90`} />
+                </div>
+                <p className="text-4xl font-black bg-gradient-to-br from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent tracking-tight mb-1">{stat.value}</p>
+                <p className="text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">{stat.label}</p>
               </div>
-              <FireIcon className="w-8 h-8 sm:w-12 sm:h-12 text-yellow-500 opacity-20" />
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-lg shadow-lg p-3 sm:p-6"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm font-medium">Total Saves</p>
-                <p className="text-2xl sm:text-4xl font-bold text-purple-600 dark:text-purple-400 mt-1 sm:mt-2">
-                  {profile?.contentCount || 0}
-                </p>
-              </div>
-              <ArchiveIcon className="w-8 h-8 sm:w-12 sm:h-12 text-purple-600 dark:text-purple-400 opacity-20" />
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 }}
-            className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-lg shadow-lg p-3 sm:p-6 cursor-pointer hover:shadow-xl transition-shadow"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm font-medium">Followers</p>
-                <p className="text-2xl sm:text-4xl font-bold text-green-600 dark:text-green-400 mt-1 sm:mt-2">
-                  {followersCount}
-                </p>
-              </div>
-              <UserIcon className="w-8 h-8 sm:w-12 sm:h-12 text-green-600 dark:text-green-400 opacity-20" />
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-lg shadow-lg p-3 sm:p-6 cursor-pointer hover:shadow-xl transition-shadow"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm font-medium">Following</p>
-                <p className="text-2xl sm:text-4xl font-bold text-orange-600 dark:text-orange-400 mt-1 sm:mt-2">
-                  {followingCount}
-                </p>
-              </div>
-              <UserIcon className="w-8 h-8 sm:w-12 sm:h-12 text-orange-600 dark:text-orange-400 opacity-20" />
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 }}
-            className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-lg shadow-lg p-3 sm:p-6"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm font-medium">Unique Tags</p>
-                <p className="text-2xl sm:text-4xl font-bold text-blue-600 dark:text-blue-400 mt-1 sm:mt-2">
-                  {profile?.totalTags || 0}
-                </p>
-              </div>
-              <TagIcon className="w-8 h-8 sm:w-12 sm:h-12 text-blue-600 dark:text-blue-400 opacity-20" />
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-lg shadow-lg p-3 sm:p-6"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm font-medium">Content Types</p>
-                <p className="text-2xl sm:text-4xl font-bold text-green-600 dark:text-green-400 mt-1 sm:mt-2">
-                  {profile?.typeBreakdown?.length || 0}
-                </p>
-              </div>
-              <ChartBarIcon className="w-8 h-8 sm:w-12 sm:h-12 text-green-600 dark:text-green-400 opacity-20" />
-            </div>
-          </motion.div>
-        </div>
+            ))}
+          </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {/* Type Breakdown */}
@@ -533,14 +460,14 @@ export default function Profile() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-lg shadow-lg p-4 sm:p-6"
+            className="glass-panel border border-gray-200/50 dark:border-gray-700/50 rounded-2xl sm:rounded-3xl shadow-lg p-5 sm:p-8"
           >
-            <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <h2 className="text-base sm:text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <ChartBarIcon className="w-5 h-5" />
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent flex items-center gap-2">
+                <ChartBarIcon className="w-6 h-6 text-purple-500" />
                 <span className="hidden sm:inline">Content by Type</span><span className="sm:hidden">By Type</span>
               </h2>
-              <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+              <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800">
                 {profile?.contentCount || 0} total
               </span>
             </div>
@@ -595,14 +522,14 @@ export default function Profile() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-lg shadow-lg p-4 sm:p-6"
+            className="glass-panel border border-gray-200/50 dark:border-gray-700/50 rounded-2xl sm:rounded-3xl shadow-lg p-5 sm:p-8"
           >
-            <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <h2 className="text-base sm:text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <TagIcon className="w-5 h-5" />
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent flex items-center gap-2">
+                <TagIcon className="w-6 h-6 text-purple-500" />
                 <span className="hidden sm:inline">Most Used Tags</span><span className="sm:hidden">Top Tags</span>
               </h2>
-              <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+              <span className="text-xs sm:text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800">
                 {profile?.totalTags || 0} unique
               </span>
             </div>
@@ -651,9 +578,9 @@ export default function Profile() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 lg:col-span-2"
+            className="glass-panel border border-gray-200/50 dark:border-gray-700/50 rounded-3xl shadow-lg p-6 lg:col-span-2"
           >
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-6">
               Recent Activity
             </h2>
             <div className="space-y-4">
