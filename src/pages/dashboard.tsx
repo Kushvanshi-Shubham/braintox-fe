@@ -100,7 +100,17 @@ function Dashboard() {
     const searchLower = debouncedSearch.toLowerCase();
     
     const filtered = contents
-      .filter(c => !debouncedSearch || c.title.toLowerCase().includes(searchLower))
+      .filter(c => {
+        // Search matches title, tags, and the link — not just the title.
+        if (!debouncedSearch) return true;
+        const inTitle = c.title.toLowerCase().includes(searchLower);
+        const inLink = (c.link ?? "").toLowerCase().includes(searchLower);
+        const inTags = c.tags?.some(tag => {
+          const tagName = typeof tag === "string" ? tag : tag.name;
+          return tagName?.toLowerCase().includes(searchLower);
+        }) ?? false;
+        return inTitle || inLink || inTags;
+      })
       .filter(c => typeFilter === "all" || c.type === typeFilter)
       .filter(c => {
         if (selectedTag === "all") return true;
