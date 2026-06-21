@@ -122,6 +122,18 @@ const UserMenuComponent = () => {
                 <UserIcon className="w-4 h-4" />
                 <span>Profile</span>
               </button>
+              <button
+                onClick={() => {
+                  navigate("/pricing");
+                  setIsOpen(false);
+                }}
+                className="flex items-center gap-3 w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+                <span>Plans &amp; pricing</span>
+              </button>
               {role === "admin" && (
                 <button
                   onClick={() => {

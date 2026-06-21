@@ -28,6 +28,7 @@ import ApiKeys from "./pages/Settings/ApiKeys";
 import ExportData from "./pages/ExportData";
 import PublicCollection from "./pages/PublicCollection";
 import Admin from "./pages/Admin";
+import Pricing from "./pages/Pricing";
 
 
 
@@ -49,6 +50,7 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/@:username" element={<PublicProfile />} />
         <Route path="/collection/:id/public" element={<PublicCollection />} />
+        <Route path="/pricing" element={<Pricing />} />
 
         {/* Protected routes with MainLayout (includes Navbar with Add Content button) */}
         <Route

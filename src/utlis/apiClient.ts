@@ -80,6 +80,14 @@ apiClient.interceptors.response.use(
       toast.error("You don't have permission to perform this action");
     }
 
+    // Handle 402 Payment Required — free-plan quota hit
+    if (error.response.status === 402) {
+      const data = error.response.data as { message?: string } | undefined;
+      toast.error(data?.message || "You've hit a Free plan limit. Upgrade to Pro to continue.", {
+        duration: 6000,
+      });
+    }
+
     // Handle 500 Internal Server Error
     if (error.response.status === 500) {
       console.error("❌ Server error:", error.response.data);
