@@ -255,6 +255,18 @@ export default function Profile() {
                     className="flex-1 md:flex-none rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg shadow-purple-500/25 px-6 py-2.5"
                   />
                   <Button
+                    onClick={() => {
+                      const url = `${window.location.origin}/@${profile?.username}`;
+                      navigator.clipboard.writeText(url).then(
+                        () => toast.success("Profile link copied! Share it anywhere."),
+                        () => toast.error("Couldn't copy — your link is " + url)
+                      );
+                    }}
+                    variant="ghost"
+                    text="Share Profile"
+                    className="flex-1 md:flex-none rounded-2xl text-purple-600 dark:text-purple-400 hover:bg-purple-50/50 dark:hover:bg-purple-900/20 border border-purple-200 dark:border-purple-800/30 shadow-sm px-6 py-2.5"
+                  />
+                  <Button
                     onClick={logout}
                     variant="ghost"
                     text=""

@@ -18,6 +18,9 @@ export const LandingNavbar = () => (
       Braintox
     </Link>
     <div className="flex items-center space-x-2">
+      <Link to="/pricing" className="hidden sm:block">
+        <Button variant="ghost" text="Pricing" />
+      </Link>
       <Link to="/login">
         <Button variant="ghost" text="Login" />
       </Link>
