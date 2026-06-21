@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { getAvatarUrl } from "../../utlis/helpers";
 
 interface AvatarProps {
   profilePic?: string | null;
@@ -18,6 +17,34 @@ const sizeClasses = {
   "2xl": "w-32 h-32",
 };
 
+const textClasses = {
+  xs: "text-[10px]",
+  sm: "text-xs",
+  md: "text-base",
+  lg: "text-xl",
+  xl: "text-3xl",
+  "2xl": "text-4xl",
+};
+
+// Deterministic gradient per username so a user's fallback avatar is stable.
+const GRADIENTS = [
+  "from-purple-500 to-pink-500",
+  "from-blue-500 to-cyan-500",
+  "from-amber-500 to-orange-500",
+  "from-emerald-500 to-teal-500",
+  "from-fuchsia-500 to-purple-600",
+  "from-rose-500 to-red-500",
+  "from-indigo-500 to-blue-500",
+];
+
+function gradientFor(name: string): string {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = (hash * 31 + name.charCodeAt(i)) >>> 0;
+  }
+  return GRADIENTS[hash % GRADIENTS.length];
+}
+
 export const Avatar = ({
   profilePic,
   username,
@@ -26,33 +53,35 @@ export const Avatar = ({
   showOnlineIndicator = false,
 }: AvatarProps) => {
   const [imgError, setImgError] = useState(false);
-  
-  // Reset error state when profilePic changes
+
   useEffect(() => {
     setImgError(false);
   }, [profilePic]);
-  
-  // Get the appropriate image source
-  const getImageSrc = () => {
-    // If there was an error loading the profile pic, or no profile pic, use generated avatar
-    if (imgError || !profilePic || profilePic.trim() === '') {
-      return getAvatarUrl(username);
-    }
-    return profilePic;
-  };
 
-  const handleError = () => {
-    setImgError(true);
-  };
+  const hasImage = !!profilePic && profilePic.trim() !== "" && !imgError;
+  const initial = (username?.trim()?.charAt(0) || "?").toUpperCase();
+  const frame = "rounded-full border-2 border-white/70 dark:border-gray-800 ring-2 ring-purple-400/40";
 
   return (
     <div className={`relative inline-block ${className}`}>
-      <img
-        src={getImageSrc()}
-        alt={`${username}'s avatar`}
-        className={`${sizeClasses[size]} rounded-full object-cover border-2 border-purple-400 dark:border-purple-600`}
-        onError={handleError}
-      />
+      {hasImage ? (
+        <img
+          src={profilePic as string}
+          alt={`${username}'s avatar`}
+          className={`${sizeClasses[size]} ${frame} object-cover`}
+          onError={() => setImgError(true)}
+        />
+      ) : (
+        // Clean gradient-initial fallback (replaces the old generated image).
+        <div
+          className={`${sizeClasses[size]} ${textClasses[size]} ${frame} bg-gradient-to-br ${gradientFor(
+            username || "?"
+          )} flex items-center justify-center font-bold text-white select-none`}
+          aria-label={`${username}'s avatar`}
+        >
+          {initial}
+        </div>
+      )}
       {showOnlineIndicator && (
         <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-800"></span>
       )}

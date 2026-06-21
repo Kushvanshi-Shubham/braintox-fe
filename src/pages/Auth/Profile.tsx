@@ -208,7 +208,12 @@ export default function Profile() {
           className="glass-panel border border-purple-200/50 dark:border-purple-800/30 rounded-2xl sm:rounded-3xl shadow-xl p-5 sm:p-8 mb-4 sm:mb-6 relative overflow-hidden"
         >
           {/* Banner */}
-          <div className="absolute top-0 left-0 right-0 h-32 sm:h-40 bg-gradient-to-br from-purple-500/20 to-pink-500/20 dark:from-purple-900/40 dark:to-pink-900/40 -z-10" />
+          <div className="absolute top-0 left-0 right-0 h-28 sm:h-44 -z-10 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-500" />
+            <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_0%_0%,rgba(255,255,255,0.35),transparent_55%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_100%_0%,rgba(56,189,248,0.25),transparent_50%)]" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white/95 dark:to-gray-900/95" />
+          </div>
 
           <div className="flex flex-col md:flex-row items-center md:items-start gap-4 sm:gap-6 pt-16 sm:pt-20">
             {/* Profile Picture */}
