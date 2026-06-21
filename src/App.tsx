@@ -29,6 +29,8 @@ import ExportData from "./pages/ExportData";
 import PublicCollection from "./pages/PublicCollection";
 import Admin from "./pages/Admin";
 import Pricing from "./pages/Pricing";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 
 
 
@@ -51,6 +53,8 @@ function App() {
         <Route path="/@:username" element={<PublicProfile />} />
         <Route path="/collection/:id/public" element={<PublicCollection />} />
         <Route path="/pricing" element={<Pricing />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
 
         {/* Protected routes with MainLayout (includes Navbar with Add Content button) */}
         <Route

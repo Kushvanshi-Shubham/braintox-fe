@@ -211,7 +211,7 @@ export function LandingPage() {
             {[
               { icon: CpuChipIcon, title: "AI-Powered Intelligence", description: "Auto-tags, summarizes, and connects your saved content using AI." },
               { icon: ShareIcon, title: "Knowledge Graph", description: "Visualize how your ideas connect in an interactive graph view." },
-              { icon: BoltIcon, title: "Lightning Fast", description: "Save anything from the web in one click with our browser extension." }
+              { icon: BoltIcon, title: "Lightning Fast", description: "Save anything from the web in one click. Browser extension coming soon." }
             ].map((item, index) => (
               <motion.div
                 key={item.title}
