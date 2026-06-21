@@ -50,18 +50,20 @@ interface SimLink {
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
-const REPULSION      = 2000;
-const SPRING_LENGTH  = 120;
+// Repulsion >> gravity so nodes spread to fill the canvas instead of
+// collapsing into a tiny central cluster.
+const REPULSION      = 6000;
+const SPRING_LENGTH  = 150;
 const SPRING_STRENGTH = 0.03;
-const GRAVITY        = 0.015;
+const GRAVITY        = 0.004;
 const DAMPING        = 0.60;
-const NODE_BASE_R    = 8;
+const NODE_BASE_R    = 13;
 const MAX_NODES_SHOWN = 150;
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function nodeRadius(n: SimNode) {
-  return NODE_BASE_R + Math.min(n.connectionCount * 2, 14);
+  return NODE_BASE_R + Math.min(n.connectionCount * 3, 24);
 }
 
 function typeColor(type: string): string {
@@ -154,7 +156,7 @@ export default function KnowledgeGraph() {
 
     // Run simulation
     let frame = 0;
-    const MAX_FRAMES = 300;
+    const MAX_FRAMES = 450;
 
     const animTick = () => {
       const nodes = simNodes.current;
@@ -430,8 +432,8 @@ export default function KnowledgeGraph() {
                     y1={l.source.y}
                     x2={l.target.x}
                     y2={l.target.y}
-                    stroke={isHighlighted ? "#a855f7" : "rgba(255, 255, 255, 0.08)"}
-                    strokeWidth={isHighlighted ? l.weight + 1.5 : Math.min(l.weight, 2)}
+                    stroke={isHighlighted ? "#a855f7" : "rgba(168, 130, 247, 0.28)"}
+                    strokeWidth={isHighlighted ? l.weight + 1.5 : Math.max(1.2, Math.min(l.weight, 3))}
                     strokeOpacity={isHighlighted ? 0.9 : 1}
                     style={{ transition: "stroke 0.3s, stroke-width 0.3s" }}
                   />
@@ -483,7 +485,7 @@ export default function KnowledgeGraph() {
                     <circle
                       r={r}
                       fill={color}
-                      fillOpacity={isSelected ? 1 : isHovered ? 0.9 : 0.75}
+                      fillOpacity={isSelected ? 1 : isHovered ? 0.95 : 0.88}
                       stroke="#fff"
                       strokeWidth={isSelected ? 2.5 : 0.5}
                       strokeOpacity={0.4}
@@ -493,8 +495,8 @@ export default function KnowledgeGraph() {
                     {(true) && (
                       <text
                         textAnchor="middle"
-                        dy={r + 12}
-                        fontSize={isSelected ? 11 : 9}
+                        dy={r + 14}
+                        fontSize={isSelected ? 13 : 11}
                         fill="#e5e7eb"
                         fontWeight={isSelected ? "700" : "400"}
                         style={{ pointerEvents: "none", userSelect: "none" }}
