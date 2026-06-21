@@ -27,6 +27,7 @@ import PublicProfile from "./pages/PublicProfile";
 import ApiKeys from "./pages/Settings/ApiKeys";
 import ExportData from "./pages/ExportData";
 import PublicCollection from "./pages/PublicCollection";
+import Admin from "./pages/Admin";
 
 
 
@@ -71,6 +72,7 @@ function App() {
           <Route path="/export" element={<ExportData />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/user/:userId" element={<UserProfile />} />
+          <Route path="/admin" element={<Admin />} />
         </Route>
       </Routes>
     </BrowserRouter>

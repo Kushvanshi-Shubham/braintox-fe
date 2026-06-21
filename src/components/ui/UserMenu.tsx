@@ -28,6 +28,7 @@ const UserMenuComponent = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [username, setUsername] = useState("User");
   const [profilePic, setProfilePic] = useState("");
+  const [role, setRole] = useState("user");
   const navigate = useNavigate();
   const location = useLocation();
   const menuRef = useRef<HTMLDivElement>(null);
@@ -45,6 +46,16 @@ const UserMenuComponent = () => {
           });
           setUsername(response.data.username);
           setProfilePic(response.data.profilePic);
+
+          // Fetch role to decide whether to show the Admin link.
+          try {
+            const planRes = await axios.get(`${BACKEND_URL}/api/v1/plan`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            setRole(planRes.data?.role || "user");
+          } catch {
+            // ignore — default role stays 'user'
+          }
         }
       } catch (error) {
         console.error("Failed to fetch user data:", error);
@@ -111,6 +122,20 @@ const UserMenuComponent = () => {
                 <UserIcon className="w-4 h-4" />
                 <span>Profile</span>
               </button>
+              {role === "admin" && (
+                <button
+                  onClick={() => {
+                    navigate("/admin");
+                    setIsOpen(false);
+                  }}
+                  className="flex items-center gap-3 w-full text-left px-4 py-2 text-sm text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/30"
+                >
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  </svg>
+                  <span>Admin</span>
+                </button>
+              )}
               <button
                 onClick={handleLogout}
                 className="flex items-center gap-3 w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/50"
