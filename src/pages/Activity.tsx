@@ -19,11 +19,11 @@ import { cn } from "../utlis/cn";
 interface Notification {
   _id: string;
   type: "follow" | "content";
-  actorId: {
+  actorId?: {
     _id: string;
     username: string;
     profilePic?: string;
-  };
+  } | null;
   contentId?: {
     _id: string;
     title: string;
@@ -183,7 +183,7 @@ export const ActivityFeed = () => {
       markAsRead(notification._id);
     }
     
-    if (notification.type === "follow") {
+    if (notification.type === "follow" && notification.actorId?._id) {
       navigate(`/user/${notification.actorId._id}`);
     }
   };
@@ -447,6 +447,8 @@ const NotificationCard = memo(({
   const isFollow = notification.type === "follow";
   const Icon = isFollow ? FollowersIcon : FeedIcon;
   const iconColor = isFollow ? "text-blue-500" : "text-green-500";
+  // Actor may be null if the user was deleted — guard so one bad row can't crash the page.
+  const actor = notification.actorId ?? { _id: "", username: "Unknown user", profilePic: "" };
 
   return (
     <motion.div
@@ -483,8 +485,8 @@ const NotificationCard = memo(({
 
         {/* Avatar */}
         <Avatar
-          profilePic={notification.actorId.profilePic}
-          username={notification.actorId.username}
+          profilePic={actor.profilePic}
+          username={actor.username}
           size="lg"
           showOnlineIndicator={!notification.isRead}
         />
@@ -493,7 +495,7 @@ const NotificationCard = memo(({
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2 mb-2">
             <h3 className="font-semibold text-gray-900 dark:text-white">
-              @{notification.actorId.username}
+              @{actor.username}
             </h3>
             {!notification.isRead && (
               <div className="flex items-center gap-1 px-2 py-1 bg-purple-600 text-white text-xs font-bold rounded-full">
