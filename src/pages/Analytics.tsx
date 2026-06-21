@@ -61,6 +61,19 @@ export default function Analytics() {
     );
   }
 
+  // Both null only when the requests failed — show a friendly message, not a blank page.
+  if (!overview && !activity) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+        <ChartBarIcon className="w-14 h-14 text-gray-300 dark:text-gray-600 mb-4" />
+        <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-1">Analytics unavailable</h2>
+        <p className="text-gray-500 dark:text-gray-400">
+          We couldn't load your analytics right now. Please refresh in a moment.
+        </p>
+      </div>
+    );
+  }
+
   const totalSaves30d = activity ? activity.activity.reduce((sum, d) => sum + d.count, 0) : 0;
 
   const statCards = overview
@@ -185,7 +198,7 @@ export default function Analytics() {
               <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Content Types</h2>
               <div className="space-y-3">
                 {overview.typeBreakdown.map((type) => {
-                  const pct = Math.round((type.count / overview.totalLinks) * 100);
+                  const pct = overview.totalLinks > 0 ? Math.round((type.count / overview.totalLinks) * 100) : 0;
                   return (
                     <div key={type._id}>
                       <div className="flex justify-between text-sm mb-1">
