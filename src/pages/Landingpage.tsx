@@ -36,7 +36,7 @@ export function LandingPage() {
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100">
       <SEOHead
         title="Your AI-Powered Knowledge Network"
-        description="Save, organize, and discover content from across the web. AI-powered tagging, knowledge graph, and social bookmarking — free forever."
+        description="Save, organize, and discover content from across the web. AI-powered tagging, knowledge graph, and social bookmarking — free to start."
         path="/"
       />
       <LandingNavbar />
