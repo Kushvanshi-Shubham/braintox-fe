@@ -445,6 +445,39 @@ export default function Profile() {
           )}
         </motion.div>
 
+        {/* Your Impact */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="glass-panel border border-purple-200/50 dark:border-purple-800/30 rounded-3xl shadow-xl p-6 sm:p-8 mb-6 relative overflow-hidden"
+        >
+          <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 opacity-[0.08]" />
+          <h2 className="text-sm font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-3">Your impact</h2>
+          <p className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white leading-tight">
+            {(profile?.clonesReceived ?? 0) > 0 ? (
+              <>
+                Your saves have been cloned{" "}
+                <span className="gradient-text">{profile?.clonesReceived}</span>{" "}
+                {profile?.clonesReceived === 1 ? "time" : "times"} — you've helped people learn. 🎉
+              </>
+            ) : (
+              <>Share a great save and start helping others learn. 🌱</>
+            )}
+          </p>
+          {profile?.badges && profile.badges.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-5">
+              {profile.badges.map((b) => (
+                <span
+                  key={b}
+                  className="px-3 py-1.5 rounded-full text-xs font-semibold bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800/30 capitalize"
+                >
+                  🏅 {b.replace(/_/g, " ")}
+                </span>
+              ))}
+            </div>
+          )}
+        </motion.div>
+
         {/* Stats Cards */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

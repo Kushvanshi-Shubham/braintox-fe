@@ -15,6 +15,7 @@ export interface Content {
   isFavorite?: boolean;
   isArchived?: boolean;
   notes?: string;
+  cloneCount?: number;
   userId?: {
     _id: string;
     username: string;
@@ -52,6 +53,8 @@ export interface ProfileData {
   recentActivity: RecentActivity[];
   topTags: TopTag[];
   totalTags: number;
+  clonesReceived: number;
+  badges: string[];
 }
 
 export interface DiscoveryData {

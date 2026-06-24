@@ -42,7 +42,7 @@ const CardComponent = ({ content, refresh, collectionId, onContentRemoved }: Car
   const [isArchived, setIsArchived] = useState(content.isArchived || false);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const { _id: contentId, title, link, type, notes, userId } = content;
+  const { _id: contentId, title, link, type, notes, userId, cloneCount } = content;
   const platformMeta = getPlatformMeta(type as ContentType);
 
   const handleDelete = async () => {
@@ -173,6 +173,14 @@ const CardComponent = ({ content, refresh, collectionId, onContentRemoved }: Car
             )}
             {isArchived && (
               <ArchiveBoxIcon className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" />
+            )}
+            {typeof cloneCount === "number" && cloneCount > 0 && (
+              <span
+                className="flex items-center gap-1 text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border border-purple-200/50 dark:border-purple-800/30"
+                title={`Cloned ${cloneCount} time${cloneCount === 1 ? "" : "s"} by others`}
+              >
+                🔁 {cloneCount}
+              </span>
             )}
           </div>
 
