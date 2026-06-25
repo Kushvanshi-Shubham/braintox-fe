@@ -11,6 +11,7 @@ import { getPlatformMeta, type ContentType } from "../utlis/contentTypeDetection
 import { PlatformIcon } from "../utlis/PlatformIcon";
 import { FireIcon, MagnifyingGlassIcon, ChartBarIcon, CubeIcon, HashtagIcon, ClockIcon } from "@heroicons/react/24/outline";
 import { cn } from "../utlis/cn";
+import { safeUrl } from "../utlis/safeUrl";
 
 const Explore = () => {
   const [searchParams] = useSearchParams();
@@ -247,7 +248,7 @@ const Explore = () => {
                             {discoveryData.randomItem.title}
                           </h4>
                           <a
-                            href={discoveryData.randomItem.link}
+                            href={safeUrl(discoveryData.randomItem.link)}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-sm text-gray-500 hover:text-purple-600 dark:hover:text-purple-400 hover:underline line-clamp-1 mb-auto"
@@ -365,7 +366,7 @@ const Explore = () => {
                                 {item.title}
                               </h4>
                               <a
-                                href={item.link}
+                                href={safeUrl(item.link)}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-xs sm:text-sm text-purple-600 dark:text-purple-400 hover:underline line-clamp-1"
@@ -524,7 +525,7 @@ const Explore = () => {
                             {item.title}
                           </h3>
                           <a
-                            href={item.link}
+                            href={safeUrl(item.link)}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-sm text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1 mb-3 line-clamp-1"

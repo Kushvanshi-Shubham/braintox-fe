@@ -17,6 +17,7 @@ import type { Content } from "../../types";
 import { triggerContentUpdate } from "../../utlis/events";
 import { Spinner } from "./Spinner";
 import { cn } from "../../utlis/cn";
+import { safeUrl } from "../../utlis/safeUrl";
 
 // Lazy load EditContentModal for better performance
 const EditContentModal = lazy(() => 
@@ -204,7 +205,7 @@ const CardComponent = ({ content, refresh, collectionId, onContentRemoved }: Car
           </h3>
           
           <a 
-            href={link} 
+            href={safeUrl(link)} 
             target="_blank" 
             rel="noopener noreferrer"
             className={cn(
@@ -346,7 +347,7 @@ const CardComponent = ({ content, refresh, collectionId, onContentRemoved }: Car
           
           <div className="flex gap-1.5">
             <a 
-              href={link} 
+              href={safeUrl(link)} 
               target="_blank" 
               rel="noopener noreferrer" 
               className={cn(

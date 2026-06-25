@@ -14,6 +14,7 @@ import { FollowButton } from "../components/ui/FollowButton";
 import { UserGroupIcon, InboxIcon, FireIcon, HashtagIcon, RectangleStackIcon, BoltIcon, CpuChipIcon } from "@heroicons/react/24/outline";
 import { PlatformIcon } from "../utlis/PlatformIcon";
 import { cn } from "../utlis/cn";
+import { safeUrl } from "../utlis/safeUrl";
 import { EmptyState } from "../components/EmptyState";
 
 interface SocialFeedContent extends Content {
@@ -353,7 +354,7 @@ const SocialFeedCard = memo(({ item, index }: { item: SocialFeedContent; index: 
           
           {/* Link - Only show domain */}
           <a
-            href={item.link}
+            href={safeUrl(item.link)}
             target="_blank"
             rel="noopener noreferrer"
             className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors line-clamp-1 block"
@@ -396,7 +397,7 @@ const SocialFeedCard = memo(({ item, index }: { item: SocialFeedContent; index: 
         {/* Actions */}
         <div className="flex items-center gap-2 mt-2">
           <a
-            href={item.link}
+            href={safeUrl(item.link)}
             target="_blank"
             rel="noopener noreferrer"
             className={cn(

@@ -3,6 +3,7 @@ import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { getEmbedUrl, detectContentType, type ContentType } from "../../utlis/contentTypeDetection";
 import { PlatformIcon } from "../../utlis/PlatformIcon";
 import { LinkPreview } from "./LinkPreview";
+import { safeUrl } from "../../utlis/safeUrl";
 
 interface EmbedPreviewProps {
   url: string;
@@ -27,7 +28,7 @@ const ErrorFallback = ({ url }: { url: string }) => (
       <ExclamationTriangleIcon className="w-12 h-12 text-red-400 mx-auto mb-3" />
       <div className="text-sm text-gray-700 dark:text-gray-300 font-medium mb-2">Failed to load preview</div>
       <a 
-        href={url} 
+        href={safeUrl(url)} 
         target="_blank" 
         rel="noopener noreferrer"
         className="text-xs text-purple-600 dark:text-purple-400 hover:underline"
@@ -108,7 +109,7 @@ const EmbedPreviewComponent = ({ url, type: userType, title }: EmbedPreviewProps
       <div ref={containerRef} className="relative w-full">
         {isLoading && <LoadingSkeleton icon={<PlatformIcon type={type} className="w-10 h-10" />} />}
         <blockquote className="twitter-tweet" data-theme="dark">
-          <a href={url}>Loading tweet...</a>
+          <a href={safeUrl(url)}>Loading tweet...</a>
         </blockquote>
       </div>
     );
@@ -125,7 +126,7 @@ const EmbedPreviewComponent = ({ url, type: userType, title }: EmbedPreviewProps
           data-instgrm-version="14"
           style={{ maxWidth: '540px', width: '100%', margin: 0, maxHeight: '600px', overflow: 'hidden' }}
         >
-          <a href={url} target="_blank" rel="noopener noreferrer">
+          <a href={safeUrl(url)} target="_blank" rel="noopener noreferrer">
             View on Instagram
           </a>
         </blockquote>

@@ -5,6 +5,7 @@ import axios from "axios";
 import { BACKEND_URL } from "../config";
 import { SEOHead } from "../components/SEOHead";
 import { LinkIcon } from "@heroicons/react/24/outline";
+import { safeUrl } from "../utlis/safeUrl";
 
 interface PublicCollectionData {
   id: string;
@@ -112,7 +113,7 @@ export default function PublicCollection() {
           {collection.content.map((item, i) => (
             <motion.a
               key={item._id}
-              href={item.link}
+              href={safeUrl(item.link)}
               target="_blank"
               rel="noopener noreferrer"
               initial={{ opacity: 0, y: 10 }}

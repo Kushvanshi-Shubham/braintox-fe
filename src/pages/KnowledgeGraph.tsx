@@ -7,6 +7,7 @@ import { getPlatformMeta, type ContentType } from "../utlis/contentTypeDetection
 import { PlatformIcon } from "../utlis/PlatformIcon";
 import { ShareIcon } from "@heroicons/react/24/outline";
 import { cn } from "../utlis/cn";
+import { safeUrl } from "../utlis/safeUrl";
 
 interface RawNode {
   id: string;
@@ -462,7 +463,7 @@ export default function KnowledgeGraph() {
                     onMouseLeave={() => setHoveredNode(null)}
                     onClick={() => {
                       if (selectedNode?.id === n.id) {
-                        window.open(n.link, "_blank", "noopener,noreferrer");
+                        window.open(safeUrl(n.link), "_blank", "noopener,noreferrer");
                         setSelectedNode(null);
                       } else {
                         setSelectedNode(n);
@@ -546,7 +547,7 @@ export default function KnowledgeGraph() {
               
               <div className="space-y-3">
                 <a
-                  href={selectedNode.link}
+                  href={safeUrl(selectedNode.link)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl text-sm font-semibold bg-white text-gray-900 hover:bg-gray-200 transition-colors"

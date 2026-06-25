@@ -1,5 +1,6 @@
 import { useState, useEffect, memo } from 'react';
 import apiClient from '../../utlis/apiClient';
+import { safeUrl } from '../../utlis/safeUrl';
 
 interface LinkMetadata {
   title: string;
@@ -47,7 +48,7 @@ const LinkPreviewComponent = ({ url, title }: LinkPreviewProps) => {
   if (metadata?.image) {
     return (
       <a
-        href={url}
+        href={safeUrl(url)}
         target="_blank"
         rel="noopener noreferrer"
         className="block w-full group"
