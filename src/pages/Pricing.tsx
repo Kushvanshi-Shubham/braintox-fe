@@ -4,7 +4,7 @@ import { usePlan } from "../hooks/usePlan";
 // Where upgrade requests go while billing is handled manually (pre-Stripe).
 // Set VITE_UPGRADE_CONTACT_EMAIL in your env; falls back to a neutral address.
 const UPGRADE_CONTACT_EMAIL =
-  import.meta.env.VITE_UPGRADE_CONTACT_EMAIL || "support@braintox.com";
+  import.meta.env.VITE_UPGRADE_CONTACT_EMAIL || "braintox.app@gmail.com";
 
 const FEATURES: { label: string; free: string; pro: string }[] = [
   { label: "Saved items", free: "100", pro: "Unlimited" },
