@@ -2,12 +2,13 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { UserIcon, CalendarIcon } from "../../Icons/IconsImport";
+import { CalendarIcon } from "../../Icons/IconsImport";
 import { Button } from "../../components/ui/button";
 import { BACKEND_URL } from "../../config";
 import { Avatar } from "../../components/ui/Avatar";
 import { FollowButton } from "../../components/ui/FollowButton";
 import type { ContentType } from "../../utlis/contentTypeDetection";
+import { PlatformIcon } from "../../utlis/PlatformIcon";
 
 interface UserProfileData {
   userId: string;
@@ -18,7 +19,7 @@ interface UserProfileData {
   joinedAt: string;
   contentCount: number;
   typeBreakdown: { _id: ContentType; count: number }[];
-  recentActivity: { title: string; type: ContentType; createdAt: string }[];
+  recentActivity: { _id: string; title: string; link: string; type: ContentType; createdAt: string; cloneCount?: number; tags?: { _id: string; name: string }[] }[];
   topTags: { name: string; count: number }[];
   totalTags: number;
   followersCount: number;
@@ -122,37 +123,37 @@ export default function UserProfile() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white dark:bg-gray-800 rounded-xl sm:rounded-lg shadow-lg p-4 sm:p-8 mb-4 sm:mb-6"
+          className="glass-panel border border-purple-200/50 dark:border-purple-800/30 rounded-2xl sm:rounded-3xl shadow-xl p-5 sm:p-8 mb-4 sm:mb-6 relative overflow-hidden"
         >
-          <div className="flex flex-col md:flex-row items-center gap-4 sm:gap-6">
-            {/* Profile Picture */}
-            <Avatar
-              profilePic={profile.profilePic}
-              username={profile.username}
-              size="xl"
-              showOnlineIndicator={false}
-            />
+          {/* Banner */}
+          <div className="absolute top-0 left-0 right-0 h-24 sm:h-36 -z-10 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-500" />
+            <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_0%_0%,rgba(255,255,255,0.3),transparent_55%)]" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white/95 dark:to-gray-900/95" />
+          </div>
 
-            {/* User Info */}
-            <div className="flex-1 text-center md:text-left">
-              <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2 justify-center md:justify-start">
-                <UserIcon className="w-6 h-6 sm:w-8 sm:h-8 text-purple-600 dark:text-purple-400" />
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-4 sm:gap-6 pt-12 sm:pt-16">
+            <div className="rounded-full p-1 bg-white dark:bg-gray-800 shadow-xl">
+              <Avatar profilePic={profile.profilePic} username={profile.username} size="xl" />
+            </div>
+
+            <div className="flex-1 text-center md:text-left mt-2">
+              <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2">
                 {profile.username}
               </h1>
-              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-2 hidden sm:block">{profile.email}</p>
-              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 flex items-center gap-2 justify-center md:justify-start">
-                <CalendarIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                <span className="hidden sm:inline">Member since </span>{new Date(profile.joinedAt).toLocaleDateString("en-US", { year: 'numeric', month: 'short' })}
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1.5 justify-center md:justify-start">
+                <CalendarIcon className="w-4 h-4" />
+                <span className="hidden sm:inline">Member since </span>
+                {new Date(profile.joinedAt).toLocaleDateString("en-US", { year: 'numeric', month: 'short' })}
               </p>
               {profile.bio && (
-                <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 mt-2 sm:mt-3 italic line-clamp-2 sm:line-clamp-none">"{profile.bio}"</p>
+                <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 mt-3 italic max-w-2xl mx-auto md:mx-0">"{profile.bio}"</p>
               )}
             </div>
 
-            {/* Follow Button */}
-            <div className="flex flex-col gap-2 w-full sm:w-auto">
-              <FollowButton 
-                userId={userId!} 
+            <div className="w-full sm:w-auto mt-4 md:mt-2">
+              <FollowButton
+                userId={userId!}
                 username={profile.username}
                 className="w-full sm:min-w-[120px]"
               />
@@ -220,6 +221,47 @@ export default function UserProfile() {
             </div>
           </motion.div>
         </div>
+
+        {/* Saves */}
+        {profile.recentActivity.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45 }}
+            className="glass-panel border border-gray-200/50 dark:border-gray-700/50 rounded-2xl sm:rounded-3xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-6"
+          >
+            <h2 className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              {profile.username}'s saves
+            </h2>
+            <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
+              {profile.recentActivity.map((item) => (
+                <a
+                  key={item._id}
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block rounded-2xl border border-gray-200/60 dark:border-gray-700/60 bg-white/60 dark:bg-gray-800/40 p-4 hover:-translate-y-0.5 hover:shadow-md transition-all"
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <PlatformIcon type={item.type} className="w-5 h-5" />
+                    <span className="text-[10px] uppercase tracking-wider font-bold text-gray-500 dark:text-gray-400">{item.type}</span>
+                    {item.cloneCount ? (
+                      <span className="ml-auto text-[10px] font-semibold text-purple-600 dark:text-purple-400" title="Times cloned by others">🔁 {item.cloneCount}</span>
+                    ) : null}
+                  </div>
+                  <h3 className="font-semibold text-sm sm:text-base text-gray-900 dark:text-white line-clamp-2">{item.title}</h3>
+                  {item.tags && item.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mt-2">
+                      {item.tags.slice(0, 4).map((t) => (
+                        <span key={t._id} className="text-[10px] px-2 py-0.5 rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-300">#{t.name}</span>
+                      ))}
+                    </div>
+                  )}
+                </a>
+              ))}
+            </div>
+          </motion.div>
+        )}
 
         {/* Content Type Breakdown */}
         {profile.typeBreakdown.length > 0 && (
