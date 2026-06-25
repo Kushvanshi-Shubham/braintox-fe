@@ -24,6 +24,7 @@ interface SocialFeedContent extends Content {
     profilePic?: string;
     brainPower?: number;
   };
+  alreadySaved?: boolean;
 }
 
 const SocialFeed = () => {
@@ -278,6 +279,8 @@ const SocialFeedCard = memo(({ item, index }: { item: SocialFeedContent; index: 
     }
   })();
 
+  const [saved, setSaved] = useState<boolean>(item.alreadySaved ?? false);
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
@@ -412,32 +415,48 @@ const SocialFeedCard = memo(({ item, index }: { item: SocialFeedContent; index: 
           </a>
           
           {currentUserId !== item.userDetails?._id && (
-            <button
-              onClick={async (e) => {
-                e.preventDefault();
-                try {
-                  const token = localStorage.getItem("token");
-                  await axios.post(`${BACKEND_URL}/api/v1/social/clone/${item._id}`, {}, {
-                    headers: { Authorization: `Bearer ${token}` }
-                  });
-                  toast.success("Cloned to your Brain!");
-                } catch (error: any) {
-                  toast.error(error.response?.data?.message || "Failed to clone content");
-                }
-              }}
-              className={cn(
-                "inline-flex items-center justify-center gap-1.5 sm:gap-2",
-                "px-4 sm:px-6 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm uppercase tracking-wider",
-                "bg-gray-100 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700",
-                "hover:bg-purple-100 dark:hover:bg-purple-900/40",
-                "text-gray-900 dark:text-purple-300 transition-all duration-200",
-                "shadow-sm hover:shadow active:scale-95"
-              )}
-              title="Clone this content to your Brain"
-            >
-              <CpuChipIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span>Clone</span>
-            </button>
+            saved ? (
+              <span
+                className={cn(
+                  "inline-flex items-center justify-center gap-1.5 sm:gap-2",
+                  "px-4 sm:px-6 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm uppercase tracking-wider",
+                  "bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/40",
+                  "text-green-700 dark:text-green-400 cursor-default"
+                )}
+                title="Already in your Brain"
+              >
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                <span>Cloned</span>
+              </span>
+            ) : (
+              <button
+                onClick={async (e) => {
+                  e.preventDefault();
+                  try {
+                    const token = localStorage.getItem("token");
+                    await axios.post(`${BACKEND_URL}/api/v1/social/clone/${item._id}`, {}, {
+                      headers: { Authorization: `Bearer ${token}` }
+                    });
+                    toast.success("Cloned to your Brain!");
+                    setSaved(true);
+                  } catch (error: any) {
+                    toast.error(error.response?.data?.message || "Failed to clone content");
+                  }
+                }}
+                className={cn(
+                  "inline-flex items-center justify-center gap-1.5 sm:gap-2",
+                  "px-4 sm:px-6 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm uppercase tracking-wider",
+                  "bg-gray-100 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700",
+                  "hover:bg-purple-100 dark:hover:bg-purple-900/40",
+                  "text-gray-900 dark:text-purple-300 transition-all duration-200",
+                  "shadow-sm hover:shadow active:scale-95"
+                )}
+                title="Clone this content to your Brain"
+              >
+                <CpuChipIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span>Clone</span>
+              </button>
+            )
           )}
         </div>
       </div>
