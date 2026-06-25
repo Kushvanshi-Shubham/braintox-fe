@@ -16,6 +16,7 @@ export interface Content {
   isArchived?: boolean;
   notes?: string;
   cloneCount?: number;
+  isPrivate?: boolean;
   userId?: {
     _id: string;
     username: string;
