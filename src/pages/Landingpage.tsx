@@ -76,13 +76,13 @@ export function LandingPage() {
               </div>
             </div>
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              Welcome to <span className="gradient-text">Braintox</span>
+              Your AI second brain — where <span className="gradient-text">curation gets recognized</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-4 max-w-3xl mx-auto">
-              Organize your links, share ideas, and build your digital brain.
+              Save any article, video, or post. Braintox auto-tags and summarizes it with AI and maps how your ideas connect — then rewards you every time someone learns from what you saved.
             </p>
             <p className="text-lg text-gray-500 dark:text-gray-500 mb-12">
-              Never lose a thought again.
+              Not another bookmark graveyard — a living brain that helps others.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
@@ -101,6 +101,7 @@ export function LandingPage() {
                 Get Started Free
               </button>
               <button
+                onClick={() => navigate("/pricing")}
                 className={cn(
                   "px-8 py-4 rounded-2xl font-semibold text-lg",
                   "bg-white dark:bg-gray-800",
@@ -113,7 +114,7 @@ export function LandingPage() {
                 )}
               >
                 <PlayCircleIcon className="w-6 h-6" />
-                Watch Demo
+                See Pricing
               </button>
             </div>
 
