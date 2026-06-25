@@ -10,6 +10,9 @@ import { FollowButton } from "../../components/ui/FollowButton";
 import type { ContentType } from "../../utlis/contentTypeDetection";
 import { PlatformIcon } from "../../utlis/PlatformIcon";
 
+// Only allow http(s) links as href, to prevent javascript:/data: URI XSS.
+const safeUrl = (url: string) => (/^https?:\/\//i.test(url || "") ? url : "#");
+
 interface UserProfileData {
   userId: string;
   username: string;
@@ -237,7 +240,7 @@ export default function UserProfile() {
               {profile.recentActivity.map((item) => (
                 <a
                   key={item._id}
-                  href={item.link}
+                  href={safeUrl(item.link)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block rounded-2xl border border-gray-200/60 dark:border-gray-700/60 bg-white/60 dark:bg-gray-800/40 p-4 hover:-translate-y-0.5 hover:shadow-md transition-all"
