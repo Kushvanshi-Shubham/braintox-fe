@@ -13,7 +13,7 @@ import type { ProfileData } from "../../types";
 import { getPlatformMeta, type ContentType } from "../../utlis/contentTypeDetection";
 import { PlatformIcon } from "../../utlis/PlatformIcon";
 import { useFollowers, useFollowing } from "../../hooks/useFollow";
-import { FireIcon, LightBulbIcon, TagIcon, ChartBarIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
+import { FireIcon, LightBulbIcon, TagIcon, ChartBarIcon, ExclamationCircleIcon, SparklesIcon } from "@heroicons/react/24/outline";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -27,6 +27,7 @@ export default function Profile() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [showCropper, setShowCropper] = useState(false);
   const [imageToCrop, setImageToCrop] = useState<string | null>(null);
+  const [generatingBio, setGeneratingBio] = useState(false);
 
   // Get user ID from token
   const getUserIdFromToken = () => {
@@ -101,6 +102,26 @@ export default function Profile() {
     } catch (err) {
       console.error("Error updating profile:", err);
       toast.error("Failed to update profile");
+    }
+  };
+
+  // AI-write the bio from the user's username + top interests
+  const handleGenerateBio = async () => {
+    setGeneratingBio(true);
+    try {
+      const token = localStorage.getItem("token");
+      const context = (profile?.topTags || []).slice(0, 5).map((t) => t.name).join(", ");
+      const res = await axios.post<{ success: boolean; text: string }>(
+        `${BACKEND_URL}/api/v1/ai/generate`,
+        { type: "bio", name: profile?.username, context },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (res.data?.text) setBio(res.data.text.slice(0, 500));
+    } catch (err) {
+      const msg = axios.isAxiosError(err) ? err.response?.data?.message : null;
+      toast.error(msg || "Couldn't generate bio. Try again.");
+    } finally {
+      setGeneratingBio(false);
     }
   };
 
@@ -415,9 +436,20 @@ export default function Profile() {
 
               {/* Bio */}
               <div>
-                  <label className="block text-sm font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3 uppercase tracking-wider">
-                    Bio
-                  </label>
+                  <div className="flex items-center justify-between mb-3">
+                    <label className="block text-sm font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent uppercase tracking-wider">
+                      Bio
+                    </label>
+                    <button
+                      type="button"
+                      onClick={handleGenerateBio}
+                      disabled={generatingBio}
+                      className="inline-flex items-center gap-1 text-xs font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    >
+                      <SparklesIcon className={`w-3.5 h-3.5 ${generatingBio ? "animate-pulse" : ""}`} />
+                      {generatingBio ? "Writing…" : "Generate with AI"}
+                    </button>
+                  </div>
                   <textarea
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}

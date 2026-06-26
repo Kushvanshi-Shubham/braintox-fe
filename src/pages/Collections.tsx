@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCollections } from "../hooks/useCollections";
 import { collectionsService } from "../services/collectionsService";
+import { BACKEND_URL } from "../config";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "../components/ui/Spinner";
 import { EmptyState } from "../components/EmptyState";
@@ -21,7 +24,8 @@ import {
   MusicalNoteIcon,
   FilmIcon,
   HomeIcon,
-  PlusIcon
+  PlusIcon,
+  SparklesIcon
 } from "@heroicons/react/24/outline";
 import { cn } from "../utlis/cn";
 import {
@@ -228,6 +232,30 @@ export default function Collections() {
   const [selectedColor, setSelectedColor] = useState(COLOR_OPTIONS[0].value);
   const [selectedIcon, setSelectedIcon] = useState(ICON_OPTIONS[0].name);
   const [isPrivate, setIsPrivate] = useState(false);
+  const [generatingDesc, setGeneratingDesc] = useState(false);
+
+  // AI-write the collection description from its name
+  const handleGenerateDescription = async () => {
+    if (!name.trim()) {
+      toast.error("Add a collection name first — AI writes from it.");
+      return;
+    }
+    setGeneratingDesc(true);
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.post<{ success: boolean; text: string }>(
+        `${BACKEND_URL}/api/v1/ai/generate`,
+        { type: "collection_description", name: name.trim() },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (res.data?.text) setDescription(res.data.text.slice(0, 500));
+    } catch (err) {
+      const msg = axios.isAxiosError(err) ? err.response?.data?.message : null;
+      toast.error(msg || "Couldn't generate. Try again.");
+    } finally {
+      setGeneratingDesc(false);
+    }
+  };
 
   // Drag and drop sensors
   const sensors = useSensors(
@@ -421,9 +449,20 @@ export default function Collections() {
 
                 {/* Description */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Description (Optional)
-                  </label>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Description (Optional)
+                    </label>
+                    <button
+                      type="button"
+                      onClick={handleGenerateDescription}
+                      disabled={generatingDesc || !name.trim()}
+                      className="inline-flex items-center gap-1 text-xs font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    >
+                      <SparklesIcon className={cn("w-3.5 h-3.5", generatingDesc && "animate-pulse")} />
+                      {generatingDesc ? "Writing…" : "Generate with AI"}
+                    </button>
+                  </div>
                   <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
