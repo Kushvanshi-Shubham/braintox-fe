@@ -1,11 +1,15 @@
-import { useEffect, useState, useMemo, memo } from "react";
+import { useEffect, useState, useMemo, memo, useCallback } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { useContent } from "../hooks/useContent";
+import { BACKEND_URL } from "../config";
 import { Card } from "../components/ui/Card";
 import { EmptyState } from "../components/EmptyState";
-import { FolderIcon } from "@heroicons/react/24/outline";
+import { FolderIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
 import { FilterSort } from "../components/ui/FilterSort";
 import { ContentGridSkeleton } from "../components/ui/Skeleton";
+import { BulkActionBar } from "../components/ui/BulkActionBar";
 
 // Local alias that works with both Content and ContentItem shapes
 type ExportableContent = {
@@ -75,6 +79,73 @@ function Dashboard() {
   const [showArchived, setShowArchived] = useState(false);
   const [selectedTag, setSelectedTag] = useState<string>("all");
   const { contents, loading, error, refresh } = useContent();
+
+  // ── Multi-select / bulk actions ─────────────────────────────────────────────
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [bulkBusy, setBulkBusy] = useState(false);
+
+  const toggleSelect = useCallback((id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+    setSelectionMode(true);
+  }, []);
+
+  const clearSelection = useCallback(() => {
+    setSelectedIds(new Set());
+    setSelectionMode(false);
+  }, []);
+
+  const authHeader = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } });
+
+  const bulkSetPrivacy = async (isPrivate: boolean) => {
+    const ids = Array.from(selectedIds);
+    setBulkBusy(true);
+    try {
+      await axios.patch(`${BACKEND_URL}/api/v1/content/bulk/privacy`, { ids, isPrivate }, authHeader());
+      toast.success(`${ids.length} ${isPrivate ? "set to private" : "set to public"}`);
+      clearSelection();
+      refresh();
+    } catch {
+      toast.error("Bulk update failed. Try again.");
+    } finally {
+      setBulkBusy(false);
+    }
+  };
+
+  const bulkDelete = async () => {
+    const ids = Array.from(selectedIds);
+    if (!globalThis.confirm(`Delete ${ids.length} item${ids.length === 1 ? "" : "s"}? This can't be undone.`)) return;
+    setBulkBusy(true);
+    try {
+      await axios.post(`${BACKEND_URL}/api/v1/content/bulk/delete`, { ids }, authHeader());
+      toast.success(`Deleted ${ids.length} item${ids.length === 1 ? "" : "s"}`);
+      clearSelection();
+      refresh();
+    } catch {
+      toast.error("Bulk delete failed. Try again.");
+    } finally {
+      setBulkBusy(false);
+    }
+  };
+
+  const bulkAddToCollection = async (collectionId: string) => {
+    const ids = Array.from(selectedIds);
+    setBulkBusy(true);
+    try {
+      await axios.post(`${BACKEND_URL}/api/v1/collections/${collectionId}/content/bulk`, { contentIds: ids }, authHeader());
+      toast.success(`Added ${ids.length} item${ids.length === 1 ? "" : "s"} to collection`);
+      clearSelection();
+    } catch {
+      toast.error("Couldn't add to collection. Try again.");
+    } finally {
+      setBulkBusy(false);
+    }
+  };
 
   // Extract unique tags from all content
   const availableTags = useMemo(() => {
@@ -220,6 +291,37 @@ function Dashboard() {
           setShowArchived={setShowArchived}
         />
 
+        {/* Selection toolbar */}
+        {!loading && !error && filteredContents.length > 0 && (
+          <div className="flex items-center gap-3 mb-4">
+            <button
+              onClick={() => (selectionMode ? clearSelection() : setSelectionMode(true))}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors ${
+                selectionMode
+                  ? "bg-purple-600 text-white border-purple-600"
+                  : "border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+              }`}
+            >
+              <CheckCircleIcon className="w-4 h-4" />
+              {selectionMode ? "Cancel" : "Select"}
+            </button>
+            {selectionMode && (
+              <button
+                onClick={() => {
+                  const allIds = filteredContents.map((c) => c._id);
+                  const allSelected = allIds.length > 0 && allIds.every((id) => selectedIds.has(id));
+                  setSelectedIds(allSelected ? new Set() : new Set(allIds));
+                }}
+                className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
+              >
+                {filteredContents.length > 0 && filteredContents.every((c) => selectedIds.has(c._id))
+                  ? "Deselect all"
+                  : "Select all"}
+              </button>
+            )}
+          </div>
+        )}
+
         {/* Content Display */}
         {loading && (
           <ContentGridSkeleton count={8} />
@@ -258,11 +360,24 @@ function Dashboard() {
                 key={content._id}
                 content={{ ...content, tags: content.tags || [] }}
                 refresh={refresh}
+                selectionMode={selectionMode}
+                selected={selectedIds.has(content._id)}
+                onToggleSelect={toggleSelect}
               />
             ))}
           </motion.div>
         )}
       </motion.div>
+
+      <BulkActionBar
+        count={selectedIds.size}
+        busy={bulkBusy}
+        onMakePrivate={() => bulkSetPrivacy(true)}
+        onMakePublic={() => bulkSetPrivacy(false)}
+        onAddToCollection={bulkAddToCollection}
+        onDelete={bulkDelete}
+        onClear={clearSelection}
+      />
     </div>
   );
 }

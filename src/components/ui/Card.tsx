@@ -13,6 +13,7 @@ import { useCollections } from "../../hooks/useCollections";
 import { getPlatformMeta, type ContentType } from "../../utlis/contentTypeDetection";
 import { PlatformIcon } from "../../utlis/PlatformIcon";
 import { StarIcon as HeroStarIcon, ArchiveBoxIcon, ChatBubbleLeftEllipsisIcon } from "@heroicons/react/24/outline";
+import { CheckIcon } from "@heroicons/react/24/solid";
 import type { Content } from "../../types";
 import { triggerContentUpdate } from "../../utlis/events";
 import { Spinner } from "./Spinner";
@@ -31,9 +32,12 @@ interface CardProps {
   refresh: () => void;
   collectionId?: string;
   onContentRemoved?: () => void;
+  selectionMode?: boolean;
+  selected?: boolean;
+  onToggleSelect?: (id: string) => void;
 }
 
-const CardComponent = ({ content, refresh, collectionId, onContentRemoved }: CardProps) => {
+const CardComponent = ({ content, refresh, collectionId, onContentRemoved, selectionMode, selected, onToggleSelect }: CardProps) => {
   const navigate = useNavigate();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -162,11 +166,41 @@ const CardComponent = ({ content, refresh, collectionId, onContentRemoved }: Car
         "shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.1)]",
         "hover:shadow-[0_20px_40px_rgba(168,85,247,0.15)] dark:hover:shadow-[0_20px_40px_rgba(168,85,247,0.2)]",
         "hover:border-purple-300/50 dark:hover:border-purple-500/50",
-        "transition-all duration-500 hover:-translate-y-2"
+        "transition-all duration-500 hover:-translate-y-2",
+        selected && "ring-2 ring-purple-500 ring-offset-2 ring-offset-white dark:ring-offset-gray-900"
       )}
     >
       {/* Gradient glow effect on hover */}
       <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+      {/* Selection checkbox — fades in on hover, always shown in selection mode */}
+      {onToggleSelect && (
+        <button
+          type="button"
+          aria-label={selected ? "Deselect" : "Select"}
+          onClick={(e) => { e.stopPropagation(); onToggleSelect(contentId); }}
+          className={cn(
+            "absolute top-3 left-3 z-30 w-7 h-7 rounded-lg flex items-center justify-center border-2 shadow-sm transition-all",
+            selected
+              ? "bg-purple-600 border-purple-600 text-white"
+              : "bg-white/90 dark:bg-gray-800/90 border-gray-300 dark:border-gray-500 text-transparent hover:border-purple-400",
+            selectionMode || selected ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+          )}
+        >
+          <CheckIcon className="w-4 h-4" />
+        </button>
+      )}
+
+      {/* In selection mode, clicking anywhere on the card toggles selection
+          instead of opening links/preview */}
+      {selectionMode && onToggleSelect && (
+        <button
+          type="button"
+          aria-label={selected ? "Deselect" : "Select"}
+          onClick={() => onToggleSelect(contentId)}
+          className="absolute inset-0 z-20 cursor-pointer"
+        />
+      )}
 
       {/* Embed preview - Full width at top */}
       <div className="w-full max-h-[300px] sm:max-h-[600px] overflow-hidden">
