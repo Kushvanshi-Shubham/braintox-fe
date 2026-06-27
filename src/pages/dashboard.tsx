@@ -10,6 +10,8 @@ import { FolderIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
 import { FilterSort } from "../components/ui/FilterSort";
 import { ContentGridSkeleton } from "../components/ui/Skeleton";
 import { BulkActionBar } from "../components/ui/BulkActionBar";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../components/ui/Dialog";
+import { Button } from "../components/ui/button";
 
 // Local alias that works with both Content and ContentItem shapes
 type ExportableContent = {
@@ -84,6 +86,7 @@ function Dashboard() {
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [bulkBusy, setBulkBusy] = useState(false);
+  const [showBulkDelete, setShowBulkDelete] = useState(false);
 
   const toggleSelect = useCallback((id: string) => {
     setSelectedIds((prev) => {
@@ -117,13 +120,13 @@ function Dashboard() {
     }
   };
 
-  const bulkDelete = async () => {
+  const confirmBulkDelete = async () => {
     const ids = Array.from(selectedIds);
-    if (!globalThis.confirm(`Delete ${ids.length} item${ids.length === 1 ? "" : "s"}? This can't be undone.`)) return;
     setBulkBusy(true);
     try {
       await axios.post(`${BACKEND_URL}/api/v1/content/bulk/delete`, { ids }, authHeader());
       toast.success(`Deleted ${ids.length} item${ids.length === 1 ? "" : "s"}`);
+      setShowBulkDelete(false);
       clearSelection();
       refresh();
     } catch {
@@ -375,9 +378,26 @@ function Dashboard() {
         onMakePrivate={() => bulkSetPrivacy(true)}
         onMakePublic={() => bulkSetPrivacy(false)}
         onAddToCollection={bulkAddToCollection}
-        onDelete={bulkDelete}
+        onDelete={() => setShowBulkDelete(true)}
         onClear={clearSelection}
       />
+
+      <Dialog open={showBulkDelete} onOpenChange={setShowBulkDelete}>
+        <DialogContent className="sm:max-w-[425px] p-6 rounded-2xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-2xl shadow-gray-900/20 dark:shadow-black/40 border border-gray-200/50 dark:border-gray-700/50">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold mb-2">Delete selected?</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <p className="text-gray-600 dark:text-gray-300">
+              Delete {selectedIds.size} item{selectedIds.size === 1 ? "" : "s"}? This action cannot be undone.
+            </p>
+          </div>
+          <DialogFooter className="flex justify-end gap-3 mt-4">
+            <Button onClick={() => setShowBulkDelete(false)} variant="ghost" text="Cancel" disabled={bulkBusy} />
+            <Button onClick={confirmBulkDelete} variant="danger" loading={bulkBusy} loadingText="Deleting..." text="Delete" />
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

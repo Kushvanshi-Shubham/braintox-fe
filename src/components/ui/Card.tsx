@@ -505,13 +505,17 @@ const CardComponent = ({ content, refresh, collectionId, onContentRemoved, selec
 
 // Memoize to prevent unnecessary re-renders (keeps embeds playing during data refresh)
 export const Card = memo(CardComponent, (prevProps, nextProps) => {
-  // Only re-render if content actually changed
+  // Only re-render if something the card actually shows changed.
+  // NOTE: must include selection props, or selecting a card won't update it.
   return (
     prevProps.content._id === nextProps.content._id &&
     prevProps.content.isFavorite === nextProps.content.isFavorite &&
     prevProps.content.isArchived === nextProps.content.isArchived &&
+    prevProps.content.isPrivate === nextProps.content.isPrivate &&
     prevProps.content.title === nextProps.content.title &&
-    prevProps.content.notes === nextProps.content.notes
+    prevProps.content.notes === nextProps.content.notes &&
+    prevProps.selected === nextProps.selected &&
+    prevProps.selectionMode === nextProps.selectionMode
   );
 });
 
