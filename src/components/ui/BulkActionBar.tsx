@@ -6,9 +6,45 @@ import {
   FolderPlusIcon,
   TrashIcon,
   XMarkIcon,
+  FolderIcon,
+  BookOpenIcon,
+  LightBulbIcon,
+  FireIcon,
+  StarIcon,
+  BriefcaseIcon,
+  PaintBrushIcon,
+  RocketLaunchIcon,
+  MapPinIcon,
+  TrophyIcon,
+  ComputerDesktopIcon,
+  BookmarkIcon,
+  MusicalNoteIcon,
+  FilmIcon,
+  HomeIcon,
 } from "@heroicons/react/24/outline";
 import { useCollections } from "../../hooks/useCollections";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./Dialog";
 import type { Collection } from "../../types";
+
+// Collections store their icon as a name string (see Collections.tsx ICON_OPTIONS)
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  Folder: FolderIcon, Book: BookOpenIcon, LightBulb: LightBulbIcon, Fire: FireIcon,
+  Star: StarIcon, Briefcase: BriefcaseIcon, Paint: PaintBrushIcon, Rocket: RocketLaunchIcon,
+  Pin: MapPinIcon, Trophy: TrophyIcon, Computer: ComputerDesktopIcon, Bookmark: BookmarkIcon,
+  Music: MusicalNoteIcon, Film: FilmIcon, Home: HomeIcon,
+};
+
+function CollectionIcon({ name, color }: { name?: string; color?: string }) {
+  const Icon = (name && ICON_MAP[name]) || FolderIcon;
+  return (
+    <span
+      className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
+      style={{ backgroundColor: `${color || "#8B5CF6"}20` }}
+    >
+      <Icon className="w-5 h-5" />
+    </span>
+  );
+}
 
 interface BulkActionBarProps {
   count: number;
@@ -33,88 +69,77 @@ export function BulkActionBar({
   const { collections } = useCollections();
 
   return (
-    <AnimatePresence>
-      {count > 0 && (
-        <motion.div
-          initial={{ y: 80, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 80, opacity: 0 }}
-          transition={{ type: "spring", stiffness: 400, damping: 30 }}
-          className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-2xl"
-        >
-          <div className="relative flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2.5 rounded-2xl bg-gray-900/95 dark:bg-gray-800/95 backdrop-blur-xl shadow-2xl border border-white/10">
-            <span className="text-sm font-semibold text-white whitespace-nowrap pr-1">
-              {count} selected
-            </span>
+    <>
+      <AnimatePresence>
+        {count > 0 && (
+          <motion.div
+            initial={{ y: 80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 80, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-2xl"
+          >
+            <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2.5 rounded-2xl bg-gray-900/95 dark:bg-gray-800/95 backdrop-blur-xl shadow-2xl border border-white/10">
+              <span className="text-sm font-semibold text-white whitespace-nowrap pr-1">
+                {count} selected
+              </span>
+              <div className="h-5 w-px bg-white/15 mx-0.5" />
+              <BarButton onClick={onMakePrivate} disabled={busy} icon={<LockClosedIcon className="w-4 h-4" />} label="Private" />
+              <BarButton onClick={onMakePublic} disabled={busy} icon={<LockOpenIcon className="w-4 h-4" />} label="Public" />
+              <BarButton onClick={() => setShowCollections(true)} disabled={busy} icon={<FolderPlusIcon className="w-4 h-4" />} label="Collection" />
+              <BarButton onClick={onDelete} disabled={busy} icon={<TrashIcon className="w-4 h-4" />} label="Delete" danger />
+              <div className="ml-auto">
+                <button
+                  onClick={onClear}
+                  disabled={busy}
+                  aria-label="Clear selection"
+                  className="p-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-50"
+                >
+                  <XMarkIcon className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-            <div className="h-5 w-px bg-white/15 mx-0.5" />
-
-            <BarButton onClick={onMakePrivate} disabled={busy} icon={<LockClosedIcon className="w-4 h-4" />} label="Private" />
-            <BarButton onClick={onMakePublic} disabled={busy} icon={<LockOpenIcon className="w-4 h-4" />} label="Public" />
-
-            <div className="relative">
-              <BarButton
-                onClick={() => setShowCollections((s) => !s)}
-                disabled={busy}
-                icon={<FolderPlusIcon className="w-4 h-4" />}
-                label="Collection"
-              />
-              <AnimatePresence>
-                {showCollections && (
-                  <motion.div
-                    initial={{ y: 8, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: 8, opacity: 0 }}
-                    className="absolute bottom-full mb-2 left-0 w-60 max-h-64 overflow-y-auto rounded-xl bg-white dark:bg-gray-800 shadow-2xl border border-gray-200 dark:border-gray-700 py-1.5"
-                  >
-                    <p className="px-3 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide">
-                      Add to collection
+      {/* Centered modal to pick a collection — no floating-popover overlap issues */}
+      <Dialog open={showCollections} onOpenChange={setShowCollections}>
+        <DialogContent className="sm:max-w-[420px] p-0 rounded-2xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-2xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden">
+          <DialogHeader className="px-5 pt-5 pb-3 border-b border-gray-200 dark:border-gray-700">
+            <DialogTitle className="text-lg font-bold">Add {count} to a collection</DialogTitle>
+          </DialogHeader>
+          <div className="max-h-80 overflow-y-auto py-2">
+            {collections.length === 0 ? (
+              <div className="px-5 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+                No collections yet. Create one from the Collections page.
+              </div>
+            ) : (
+              collections.map((c: Collection) => (
+                <button
+                  key={c.id}
+                  disabled={busy}
+                  onClick={() => {
+                    setShowCollections(false);
+                    onAddToCollection(c.id);
+                  }}
+                  className="w-full px-5 py-3 flex items-center gap-3 text-left hover:bg-gray-50 dark:hover:bg-gray-700/60 transition-colors disabled:opacity-50"
+                  style={{ color: c.color }}
+                >
+                  <CollectionIcon name={c.icon} color={c.color} />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-gray-900 dark:text-white truncate">{c.name}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      {c.contentCount} {c.contentCount === 1 ? "item" : "items"}
                     </p>
-                    {collections.length === 0 ? (
-                      <p className="px-3 py-2 text-sm text-gray-500">No collections yet</p>
-                    ) : (
-                      collections.map((c: Collection) => (
-                        <button
-                          key={c.id}
-                          onClick={() => {
-                            setShowCollections(false);
-                            onAddToCollection(c.id);
-                          }}
-                          className="w-full px-3 py-2 flex items-center gap-2.5 text-left hover:bg-gray-50 dark:hover:bg-gray-700/60 transition-colors"
-                        >
-                          <span
-                            className="w-7 h-7 rounded-lg flex items-center justify-center text-base flex-shrink-0"
-                            style={{ backgroundColor: `${c.color}20` }}
-                          >
-                            {c.icon}
-                          </span>
-                          <span className="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">
-                            {c.name}
-                          </span>
-                        </button>
-                      ))
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            <BarButton onClick={onDelete} disabled={busy} icon={<TrashIcon className="w-4 h-4" />} label="Delete" danger />
-
-            <div className="ml-auto">
-              <button
-                onClick={onClear}
-                disabled={busy}
-                aria-label="Clear selection"
-                className="p-1.5 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-50"
-              >
-                <XMarkIcon className="w-5 h-5" />
-              </button>
-            </div>
+                  </div>
+                </button>
+              ))
+            )}
           </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
