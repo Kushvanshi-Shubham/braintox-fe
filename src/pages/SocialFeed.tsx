@@ -135,7 +135,7 @@ const SocialFeed = () => {
   }
 
   return (
-    <div className="min-h-screen px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
+    <div className="min-h-screen px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 overflow-x-hidden">
       <div className="max-w-5xl mx-auto space-y-4 sm:space-y-6 md:space-y-8">
         {/* Header */}
         <motion.div
@@ -193,7 +193,7 @@ const SocialFeed = () => {
             </div>
             <div className="flex overflow-x-auto gap-4 sm:gap-6 pb-4 snap-x hide-scrollbar scroll-smooth">
               {trending.map((item, idx) => (
-                <div key={item._id} className="min-w-[280px] sm:min-w-[320px] max-w-[350px] w-full shrink-0 snap-start">
+                <div key={item._id} className="w-[280px] sm:w-[320px] shrink-0 snap-start">
                   <SocialFeedCard item={item} index={idx} />
                 </div>
               ))}
