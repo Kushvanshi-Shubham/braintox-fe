@@ -6,6 +6,11 @@ export class BackendHealthService {
   private isBackendHealthy: boolean = true;
   private healthCheckInterval: ReturnType<typeof setInterval> | null = null;
   private readonly listeners: Set<(isHealthy: boolean) => void> = new Set();
+  // Render free tier is sluggish; require a few consecutive failures before
+  // showing the "backend down" banner so a single slow poll doesn't trip it.
+  private consecutiveFailures = 0;
+  private readonly failureThreshold = 3;
+  private readonly timeoutMs = 8000;
 
   private constructor() {
     this.startHealthCheck();
@@ -19,26 +24,35 @@ export class BackendHealthService {
   }
 
   private startHealthCheck() {
-    // Check backend health every 10 seconds
-    this.healthCheckInterval = setInterval(async () => {
-      try {
-        const response = await axios.get(`${BACKEND_URL}/api/v1/status`, {
-          timeout: 3000,
-        });
-        
-        if (response.status === 200 && this.isBackendHealthy === false) {
-          console.log("✅ Backend is back online!");
-          this.setBackendHealth(true);
-        } else if (!this.isBackendHealthy) {
-          this.setBackendHealth(true);
-        }
-      } catch {
-        if (this.isBackendHealthy) {
-          console.error("❌ Backend is down or unreachable");
-          this.setBackendHealth(false);
-        }
+    // Poll every 20s (gentler than 10s, fewer false positives on a slow tier)
+    this.healthCheckInterval = setInterval(() => {
+      void this.ping();
+    }, 20000);
+  }
+
+  // Single health probe. Recovers immediately on success; only flips to "down"
+  // after `failureThreshold` consecutive failures so transient slowness or one
+  // cold-start hiccup doesn't flash the banner.
+  private async ping(): Promise<boolean> {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/api/v1/status`, {
+        timeout: this.timeoutMs,
+      });
+      if (response.status === 200) {
+        if (!this.isBackendHealthy) console.log("✅ Backend is back online!");
+        this.consecutiveFailures = 0;
+        this.setBackendHealth(true);
+        return true;
       }
-    }, 10000);
+      return this.isBackendHealthy;
+    } catch {
+      this.consecutiveFailures++;
+      if (this.consecutiveFailures >= this.failureThreshold && this.isBackendHealthy) {
+        console.error("❌ Backend is down or unreachable");
+        this.setBackendHealth(false);
+      }
+      return false;
+    }
   }
 
   private setBackendHealth(isHealthy: boolean) {
@@ -67,17 +81,7 @@ export class BackendHealthService {
   }
 
   async checkNow(): Promise<boolean> {
-    try {
-      const response = await axios.get(`${BACKEND_URL}/api/v1/status`, {
-        timeout: 3000,
-      });
-      const isHealthy = response.status === 200;
-      this.setBackendHealth(isHealthy);
-      return isHealthy;
-    } catch {
-      this.setBackendHealth(false);
-      return false;
-    }
+    return this.ping();
   }
 
   stopHealthCheck() {
