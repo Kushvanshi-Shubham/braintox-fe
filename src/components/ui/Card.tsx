@@ -121,8 +121,10 @@ const CardComponent = ({ content, refresh, collectionId, onContentRemoved }: Car
       );
       setIsPrivate(newPrivate);
       toast.success(newPrivate ? "Set to private — only you can see it" : "Set to public");
+      // Card already updated locally; trigger a SILENT background sync (no
+      // skeleton). Do NOT call refresh() — that flips loading=true and reloads
+      // the whole grid, which feels jarring.
       triggerContentUpdate();
-      refresh();
     } catch (error) {
       console.error("Failed to toggle privacy:", error);
       toast.error("Failed to update privacy");
