@@ -173,22 +173,9 @@ const CardComponent = ({ content, refresh, collectionId, onContentRemoved, selec
       {/* Gradient glow effect on hover */}
       <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
-      {/* Selection checkbox — fades in on hover, always shown in selection mode */}
-      {onToggleSelect && (
-        <button
-          type="button"
-          aria-label={selected ? "Deselect" : "Select"}
-          onClick={(e) => { e.stopPropagation(); onToggleSelect(contentId); }}
-          className={cn(
-            "absolute top-3 left-3 z-30 w-7 h-7 rounded-lg flex items-center justify-center border-2 shadow-sm transition-all",
-            selected
-              ? "bg-purple-600 border-purple-600 text-white"
-              : "bg-white/90 dark:bg-gray-800/90 border-gray-300 dark:border-gray-500 text-transparent hover:border-purple-400",
-            selectionMode || selected ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-          )}
-        >
-          <CheckIcon className="w-4 h-4" />
-        </button>
+      {/* Purple wash over the whole card when selected (clear visual state) */}
+      {selected && (
+        <div className="absolute inset-0 z-10 bg-purple-500/15 dark:bg-purple-500/20 pointer-events-none" />
       )}
 
       {/* In selection mode, clicking anywhere on the card toggles selection
@@ -200,6 +187,25 @@ const CardComponent = ({ content, refresh, collectionId, onContentRemoved, selec
           onClick={() => onToggleSelect(contentId)}
           className="absolute inset-0 z-20 cursor-pointer"
         />
+      )}
+
+      {/* Selection checkbox — top-right so it never overlaps the type icon/badges.
+          Always shown in selection mode; fades in on hover otherwise. */}
+      {onToggleSelect && (
+        <button
+          type="button"
+          aria-label={selected ? "Deselect" : "Select"}
+          onClick={(e) => { e.stopPropagation(); onToggleSelect(contentId); }}
+          className={cn(
+            "absolute top-3 right-3 z-40 w-8 h-8 rounded-full flex items-center justify-center border-2 shadow-md transition-all",
+            selected
+              ? "bg-purple-600 border-purple-600 text-white"
+              : "bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-500 text-transparent hover:border-purple-400",
+            selectionMode || selected ? "opacity-100 scale-100" : "opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100"
+          )}
+        >
+          <CheckIcon className="w-5 h-5" />
+        </button>
       )}
 
       {/* Embed preview - Full width at top */}
