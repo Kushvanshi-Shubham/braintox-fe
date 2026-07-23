@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FolderIcon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
 import { useCollections } from "../../hooks/useCollections";
+import { CollectionIcon } from "../../utlis/collectionIcon";
 import type { Collection } from "../../types";
 
 interface AddToCollectionProps {
@@ -82,12 +83,7 @@ export function AddToCollection({ contentId, onClose }: Readonly<AddToCollection
                 disabled={adding === collection.id}
                 className="w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-50"
               >
-                <div
-                  className="w-10 h-10 rounded-lg flex items-center justify-center text-xl flex-shrink-0"
-                  style={{ backgroundColor: `${collection.color}20` }}
-                >
-                  {collection.icon}
-                </div>
+                <CollectionIcon name={collection.icon} color={collection.color} />
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-gray-900 dark:text-white truncate">
                     {collection.name}

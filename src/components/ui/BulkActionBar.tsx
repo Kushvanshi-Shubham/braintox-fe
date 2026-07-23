@@ -6,45 +6,11 @@ import {
   FolderPlusIcon,
   TrashIcon,
   XMarkIcon,
-  FolderIcon,
-  BookOpenIcon,
-  LightBulbIcon,
-  FireIcon,
-  StarIcon,
-  BriefcaseIcon,
-  PaintBrushIcon,
-  RocketLaunchIcon,
-  MapPinIcon,
-  TrophyIcon,
-  ComputerDesktopIcon,
-  BookmarkIcon,
-  MusicalNoteIcon,
-  FilmIcon,
-  HomeIcon,
 } from "@heroicons/react/24/outline";
 import { useCollections } from "../../hooks/useCollections";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./Dialog";
+import { CollectionIcon } from "../../utlis/collectionIcon";
 import type { Collection } from "../../types";
-
-// Collections store their icon as a name string (see Collections.tsx ICON_OPTIONS)
-const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
-  Folder: FolderIcon, Book: BookOpenIcon, LightBulb: LightBulbIcon, Fire: FireIcon,
-  Star: StarIcon, Briefcase: BriefcaseIcon, Paint: PaintBrushIcon, Rocket: RocketLaunchIcon,
-  Pin: MapPinIcon, Trophy: TrophyIcon, Computer: ComputerDesktopIcon, Bookmark: BookmarkIcon,
-  Music: MusicalNoteIcon, Film: FilmIcon, Home: HomeIcon,
-};
-
-function CollectionIcon({ name, color }: { name?: string; color?: string }) {
-  const Icon = (name && ICON_MAP[name]) || FolderIcon;
-  return (
-    <span
-      className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
-      style={{ backgroundColor: `${color || "#8B5CF6"}20` }}
-    >
-      <Icon className="w-5 h-5" />
-    </span>
-  );
-}
 
 interface BulkActionBarProps {
   count: number;
