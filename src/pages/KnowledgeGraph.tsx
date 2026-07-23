@@ -21,7 +21,9 @@ interface RawLink {
   source: string;
   target: string;
   sharedTags: string[];
+  sharedCollections?: string[];
   weight: number;
+  type?: "tag" | "collection" | "both";
 }
 
 interface GraphData {
@@ -46,7 +48,9 @@ interface SimLink {
   source: SimNode;
   target: SimNode;
   sharedTags: string[];
+  sharedCollections: string[];
   weight: number;
+  type: "tag" | "collection" | "both";
 }
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -152,7 +156,9 @@ export default function KnowledgeGraph() {
         source: nodeById.get(l.source)!,
         target: nodeById.get(l.target)!,
         sharedTags: l.sharedTags,
+        sharedCollections: l.sharedCollections ?? [],
         weight: l.weight,
+        type: l.type ?? "tag",
       }));
 
     // Run simulation
@@ -337,6 +343,17 @@ export default function KnowledgeGraph() {
   const nodes = simNodes.current;
   const links = simLinks.current;
 
+  // Hover (or selection) drives the Obsidian-style highlight/dim. Precompute the
+  // active node's neighbours once so nodes/links can dim in O(1).
+  const activeNode = hoveredNode ?? selectedNode;
+  const connectedIds = new Set<string>();
+  if (activeNode) {
+    for (const l of links) {
+      if (l.source.id === activeNode.id) connectedIds.add(l.target.id);
+      else if (l.target.id === activeNode.id) connectedIds.add(l.source.id);
+    }
+  }
+
   return (
     <div className="flex flex-col h-screen bg-gray-950 text-white overflow-hidden">
       {/* ── Top bar ── */}
@@ -361,9 +378,21 @@ export default function KnowledgeGraph() {
           className="ml-auto w-48 px-3 py-1.5 rounded-lg bg-gray-800 border border-gray-700 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
         />
 
+        {/* Legend */}
+        <div className="hidden sm:flex items-center gap-3 text-xs text-gray-400">
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block w-4 h-0.5 rounded" style={{ background: "#a855f7" }} />
+            Shared tag
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span className="inline-block w-4 h-0.5 rounded" style={{ background: "#f59e0b" }} />
+            Same collection
+          </span>
+        </div>
+
         {/* Instructions */}
-        <span className="hidden md:block text-xs text-gray-500">
-          Drag nodes · Scroll to zoom · Click to open
+        <span className="hidden lg:block text-xs text-gray-500">
+          Hover to focus · Drag · Scroll to zoom · Click to open
         </span>
 
         {/* Reset zoom */}
@@ -424,8 +453,13 @@ export default function KnowledgeGraph() {
               .filter(l => visibleNodeIds.has(l.source.id) && visibleNodeIds.has(l.target.id))
               .map((l, i) => {
                 const isHighlighted =
-                  selectedNode &&
-                  (l.source.id === selectedNode.id || l.target.id === selectedNode.id);
+                  activeNode &&
+                  (l.source.id === activeNode.id || l.target.id === activeNode.id);
+                const dimmed = activeNode && !isHighlighted;
+                const isCollection = l.type === "collection";
+                // Collection links = amber, tag links = purple.
+                const baseColor = isCollection ? "rgba(251, 191, 36, 0.30)" : "rgba(168, 130, 247, 0.26)";
+                const brightColor = isCollection ? "#f59e0b" : "#a855f7";
                 return (
                   <line
                     key={i}
@@ -433,10 +467,10 @@ export default function KnowledgeGraph() {
                     y1={l.source.y}
                     x2={l.target.x}
                     y2={l.target.y}
-                    stroke={isHighlighted ? "#a855f7" : "rgba(168, 130, 247, 0.28)"}
+                    stroke={isHighlighted ? brightColor : baseColor}
                     strokeWidth={isHighlighted ? l.weight + 1.5 : Math.max(1.2, Math.min(l.weight, 3))}
-                    strokeOpacity={isHighlighted ? 0.9 : 1}
-                    style={{ transition: "stroke 0.3s, stroke-width 0.3s" }}
+                    strokeOpacity={dimmed ? 0.05 : isHighlighted ? 0.95 : 1}
+                    style={{ transition: "stroke 0.25s, stroke-width 0.25s, stroke-opacity 0.25s" }}
                   />
                 );
               })}
@@ -449,10 +483,9 @@ export default function KnowledgeGraph() {
                 const color = typeColor(n.type);
                 const isHovered   = hoveredNode?.id  === n.id;
                 const isSelected  = selectedNode?.id === n.id;
-                const isConnected = selectedNode
-                  ? links.some(l => (l.source.id === selectedNode.id || l.target.id === selectedNode.id) && (l.source.id === n.id || l.target.id === n.id))
-                  : false;
-                const dimmed = selectedNode && !isSelected && !isConnected;
+                const isActive    = activeNode?.id === n.id;
+                const isConnected = connectedIds.has(n.id);
+                const dimmed = activeNode && !isActive && !isConnected;
 
                 return (
                   <g
